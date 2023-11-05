@@ -20,7 +20,7 @@ const Header = () => {
                         <img
                             src={logo}
                             className="mr-3 h-6 md:h-9 dark:invert"
-                            alt="Flowbite React Logo"
+                            alt="Kotha Logo"
                         />
                     </Link>
                     <div className="flex md:order-2">
