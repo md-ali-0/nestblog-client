@@ -9,14 +9,13 @@ import {
 import { Link, NavLink } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 const Header = () => {
-    const user = true;
+    const user = false;
     return (
         <Flowbite>
             <header>
                 <Navbar
-                    className="bg-white/60 dark:bg-[#161819] shadow-sm backdrop-blur"
-                    container="true"
-                    >
+                    className="bg-white/60 dark:bg-[#161819] shadow-sm dark:shadow-xl backdrop-blur relative"
+                    container="true">
                     <Link className="flex items-center" to="/">
                         <img
                             src={logo}
@@ -25,9 +24,10 @@ const Header = () => {
                         />
                     </Link>
                     <div className="flex md:order-2">
-                        <DarkThemeToggle className='mr-2'/>
+                        <DarkThemeToggle className="mr-2" />
                         {user ? (
                             <Dropdown
+                                className="z-50"
                                 arrowIcon={false}
                                 inline
                                 label={
@@ -53,8 +53,12 @@ const Header = () => {
                             </Dropdown>
                         ) : (
                             <div className="flex gap-3 px-2">
-                                <Button size="sm" color="blue">Login</Button>
-                                <Button size="sm" color="gray">Register</Button>
+                                <Button size="sm" color="blue">
+                                    Login
+                                </Button>
+                                <Button size="sm" color="gray">
+                                    Register
+                                </Button>
                             </div>
                         )}
                         <Navbar.Toggle />
