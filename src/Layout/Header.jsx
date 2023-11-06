@@ -5,16 +5,22 @@ import {
     Flowbite,
     Navbar
 } from 'flowbite-react';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
+import { AuthContext } from '../Context/AuthContext';
 import logo from '../assets/logo.svg';
+import Loading from '../components/loading';
 
 const Header = () => {
-    const user = false;
+    const {user, isLoading} = useContext(AuthContext)
     useEffect(() => {
         window.scrollTo(0, 0)
       }, [])
+
+    if (isLoading) {
+        return <Loading/>
+    }
     return (
         <Flowbite>
             <header>
@@ -38,16 +44,16 @@ const Header = () => {
                                 label={
                                     <Avatar
                                         alt="User settings"
-                                        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                                        img={user?.photoURL}
                                         rounded
                                     />
                                 }>
                                 <Dropdown.Header>
                                     <span className="block text-sm">
-                                        Bonnie Green
+                                        {user?.displayName}
                                     </span>
                                     <span className="block truncate text-sm font-medium">
-                                        name@flowbite.com
+                                        {user?.email}
                                     </span>
                                 </Dropdown.Header>
                                 <Dropdown.Item>Dashboard</Dropdown.Item>
