@@ -2,14 +2,15 @@ import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import useImageUpload from '../../Hooks/useImageUpload';
 import logo from '../../assets/logo.svg';
 
 const Register = () => {
-    const { createUser } = useContext(AuthContext);
+    const { createUser, updateUser, logOutUser } = useContext(AuthContext);
     const [show, setShow] = useState(false);
+    const navigate = useNavigate()
     const { uploadImage } = useImageUpload();
     const {
         register,
@@ -21,16 +22,18 @@ const Register = () => {
     }, []);
 
     const onSubmit = async (data) => {
-        const { name, picture, email, password } = data;
-        console.log(picture[0].name);
+        const { userName, picture, email, password } = data;
         try {
             const userResult = await createUser(email, password);
-            console.log(userResult.user);
             if (userResult.user?.email) {
                 try {
                     const imageResult = await uploadImage(picture[0]);
-                    console.log(imageResult);
-                    toast.success('Successfully created!');
+                    if (imageResult) {
+                        await updateUser(userName, imageResult)
+                        toast.success('Successfully created!');
+                        await logOutUser();
+                        navigate('/auth/login')
+                    }
                 } catch (error) {
                     console.log('Error image', error);
                 }
@@ -71,13 +74,13 @@ const Register = () => {
                                     onSubmit={handleSubmit(onSubmit)}>
                                     <div className="space-y-1">
                                         <label
-                                            htmlFor="name"
+                                            htmlFor="userName"
                                             className="text-sm font-medium">
                                             User Name
                                         </label>
                                         <input
                                             type="text"
-                                            {...register('name', {
+                                            {...register('userName', {
                                                 required:
                                                     'User Name is required.',
                                                 minLength: {
@@ -90,6 +93,10 @@ const Register = () => {
                                                     message:
                                                         'User Name should not exceed 15 characters.',
                                                 },
+                                                pattern:{
+                                                    value: /\s/,
+                                                    message: 'User Name should not be with space.'
+                                                }
                                             })}
                                             placeholder="Enter User Name"
                                             className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
