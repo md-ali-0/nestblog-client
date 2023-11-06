@@ -1,15 +1,20 @@
 import {
     Avatar,
-    Button,
     DarkThemeToggle,
     Dropdown,
     Flowbite,
-    Navbar,
+    Navbar
 } from 'flowbite-react';
+import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
 import logo from '../assets/logo.svg';
+
 const Header = () => {
     const user = false;
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
     return (
         <Flowbite>
             <header>
@@ -24,7 +29,7 @@ const Header = () => {
                         />
                     </Link>
                     <div className="flex md:order-2">
-                        <DarkThemeToggle className="mr-2" />
+                        <DarkThemeToggle className="mr-2 focus:ring-0" />
                         {user ? (
                             <Dropdown
                                 className="z-50"
@@ -52,14 +57,10 @@ const Header = () => {
                                 <Dropdown.Item>Sign out</Dropdown.Item>
                             </Dropdown>
                         ) : (
-                            <div className="flex gap-3 px-2">
-                                <Button size="sm" color="blue">
-                                    <Link to='/auth/login'>Login</Link>
-                                </Button>
-                                <Button size="sm" color="gray">
-                                    <Link to='/auth/register'>Register</Link>
-                                </Button>
-                            </div>
+                            <div className="flex justify-center gap-2">
+                            <Link to='/auth/login' className="inline-flex text-white bg-primary border-0 py-1.5 px-3 focus:outline-none hover:bg-blue-500 rounded text-lg">Login</Link>
+                            <Link to='/auth/register' className="inline-flex text-gray-700 bg-gray-100 border-0 py-1.5 px-3 focus:outline-none hover:bg-gray-200 rounded text-lg dark:bg-[#1F2937] dark:text-gray-400">Register</Link>
+                          </div>
                         )}
                         <Navbar.Toggle />
                     </div>
@@ -77,6 +78,7 @@ const Header = () => {
                         <Navbar.Link href="/contact">Contact</Navbar.Link>
                     </Navbar.Collapse>
                 </Navbar>
+                <Toaster />
             </header>
         </Flowbite>
     );

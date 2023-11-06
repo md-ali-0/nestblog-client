@@ -1,15 +1,17 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 
 const Login = () => {
-    const handleLogin = (e)=>{
+    const handleLogin = (e) => {
         e.preventDefault();
-    }
+    };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
-        <div
-            className="flex flex-col mx-auto w-full min-h-screen min-w-[320px] bg-gray-100 dark:text-gray-100 dark:bg-gray-900">
-            <main
-                className="flex flex-auto flex-col max-w-full">
+        <div className="flex flex-col mx-auto w-full min-h-screen min-w-[320px] bg-gray-100 dark:text-gray-100 dark:bg-gray-900">
+            <main className="flex flex-auto flex-col max-w-full">
                 <div className="min-h-screen flex items-center justify-center relative overflow-hidden max-w-10xl mx-auto p-4 lg:p-5 w-full">
                     <section className="py-2 w-full max-w-xl">
                         <header className="mb-10 text-center">
@@ -25,9 +27,11 @@ const Login = () => {
                             </h2>
                         </header>
                         <div className="relative flex flex-col rounded-lg shadow-sm bg-white dark:text-gray-100 dark:bg-gray-800">
-                            <div className='flex justify-center'>
-                                <Link className='absolute -top-2 text-xs font-medium text-gray-800 bg-gray-100 rounded-full px-3 py-1 dark:bg-gray-700 dark:text-gray-200' to='/'>
-                                Back to Home
+                            <div className="flex justify-center">
+                                <Link
+                                    className="absolute -top-2 text-xs font-medium text-gray-800 bg-gray-100 rounded-full px-3 py-1 dark:bg-gray-700 dark:text-gray-200"
+                                    to="/">
+                                    Back to Home
                                 </Link>
                             </div>
                             <div className="p-5 md:px-16 md:py-10 grow">
@@ -45,7 +49,7 @@ const Login = () => {
                                             id="email"
                                             name="email"
                                             placeholder="Enter your email"
-                                            className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
+                                            className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                         />
                                     </div>
                                     <div className="space-y-1">
@@ -59,7 +63,7 @@ const Login = () => {
                                             id="password"
                                             name="password"
                                             placeholder="Enter your password"
-                                            className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
+                                            className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                         />
                                     </div>
                                     <div>
@@ -99,7 +103,7 @@ const Login = () => {
                                                 type="button"
                                                 className="inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-3 py-2 leading-5 text-sm border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm focus:ring focus:ring-gray-300 focus:ring-opacity-25 active:border-gray-200 active:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-gray-200 dark:focus:ring-gray-600 dark:focus:ring-opacity-40 dark:active:border-gray-700">
                                                 <svg
-                                                    className='bi bi-facebook inline-block w-4 h-4'
+                                                    className="bi bi-facebook inline-block w-4 h-4"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     x="0px"
                                                     y="0px"
@@ -139,9 +143,11 @@ const Login = () => {
                             <div className="p-5 md:px-16 rounded-b-xl grow text-sm text-center bg-gray-50 dark:bg-gray-700/50">
                                 Don’t have an account yet?
                                 <Link
-                                    to='/auth/register'
+                                    to="/auth/register"
                                     className="font-medium text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">
-                                    <span className='px-1 font-bold'>Sign Up</span>
+                                    <span className="px-1 font-bold">
+                                        Sign Up
+                                    </span>
                                 </Link>
                             </div>
                         </div>

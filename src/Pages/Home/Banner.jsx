@@ -15,7 +15,7 @@ const Banner = () => {
                         perfect oh plants, for and again. I’ve honey feeling.
                     </p>
                     <div className="flex justify-center">
-                        <button className="inline-flex text-white bg-primary border-0 py-2 px-6 focus:outline-none hover:bg-primary rounded text-lg">
+                        <button className="inline-flex text-white bg-primary border-0 py-2 px-6 focus:outline-none hover:bg-blue-500 rounded text-lg">
                             Explore
                         </button>
                     </div>
