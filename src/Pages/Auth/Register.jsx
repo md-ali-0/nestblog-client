@@ -4,11 +4,13 @@ import toast, { Toaster } from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
+import useImageUpload from '../../Hooks/useImageUpload';
 import logo from '../../assets/logo.svg';
 
 const Register = () => {
     const { createUser } = useContext(AuthContext);
     const [show, setShow] = useState(false);
+    const { uploadImage } = useImageUpload();
     const {
         register,
         handleSubmit,
@@ -20,15 +22,21 @@ const Register = () => {
 
     const onSubmit = async (data) => {
         const { name, picture, email, password } = data;
-        console.log(picture);
+        console.log(picture[0].name);
         try {
-            const result = await createUser(email, password);
-            console.log(result.user);
-            if (result.user?.email) {
-                toast.success('Successfully created!');
+            const userResult = await createUser(email, password);
+            console.log(userResult.user);
+            if (userResult.user?.email) {
+                try {
+                    const imageResult = await uploadImage(picture[0]);
+                    console.log(imageResult);
+                    toast.success('Successfully created!');
+                } catch (error) {
+                    console.log('Error image', error);
+                }
             }
         } catch (error) {
-            console.log('Error during signup', error);
+            console.log('Error signup', error);
         }
     };
 
@@ -70,14 +78,17 @@ const Register = () => {
                                         <input
                                             type="text"
                                             {...register('name', {
-                                                required: 'User Name is required.',
+                                                required:
+                                                    'User Name is required.',
                                                 minLength: {
                                                     value: 5,
-                                                    message: 'User Name should be at least 5 characters.'
+                                                    message:
+                                                        'User Name should be at least 5 characters.',
                                                 },
                                                 maxLength: {
                                                     value: 15,
-                                                    message: "User Name should not exceed 15 characters."
+                                                    message:
+                                                        'User Name should not exceed 15 characters.',
                                                 },
                                             })}
                                             placeholder="Enter User Name"
@@ -103,12 +114,25 @@ const Register = () => {
                                             type="file"
                                             accept="image/png, image/jpeg"
                                             {...register('picture', {
-                                                required: 'Profile Picture is required.',
-                                                validate: (value)=>{
-                                                    const acceptFormat = ['png', 'jpg', 'jpeg'];
-                                                    const fileExtension = value[0]?.name.split('.').pop().toLowerCase();
-                                                    if (!acceptFormat.includes(fileExtension)) {
-                                                        return 'Invalid file. Select .png, .jpg, .jpeg only.'
+                                                required:
+                                                    'Profile Picture is required.',
+                                                validate: (value) => {
+                                                    const acceptFormat = [
+                                                        'png',
+                                                        'jpg',
+                                                        'jpeg',
+                                                    ];
+                                                    const fileExtension =
+                                                        value[0]?.name
+                                                            .split('.')
+                                                            .pop()
+                                                            .toLowerCase();
+                                                    if (
+                                                        !acceptFormat.includes(
+                                                            fileExtension,
+                                                        )
+                                                    ) {
+                                                        return 'Invalid file. Select .png, .jpg, .jpeg only.';
                                                     }
                                                     return true;
                                                 },
