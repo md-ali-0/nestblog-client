@@ -2,13 +2,16 @@ import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 
 const Register = () => {
+    const handleRegister = (e)=>{
+        e.preventDefault();
+    }
     return (
         <div
             className="flex flex-col mx-auto w-full min-h-screen min-w-[320px] bg-gray-100 dark:text-gray-100 dark:bg-gray-900">
             <main
                 className="flex flex-auto flex-col max-w-full">
-                <div className="min-h-screen flex items-center justify-center relative overflow-hidden max-w-10xl mx-auto p-4 lg:p-8 w-full">
-                    <section className="py-6 w-full max-w-xl">
+                <div className="min-h-screen flex items-center justify-center relative overflow-hidden max-w-10xl mx-auto p-4 lg:p-5 w-full">
+                    <section className="py-2 w-full max-w-xl">
                         <header className="mb-10 text-center">
                             <h1 className="text-2xl font-bold inline-flex items-center mb-2 space-x-2">
                                 <img
@@ -27,10 +30,10 @@ const Register = () => {
                                 Back to Home
                                 </Link>
                             </div>
-                            <div className="p-5 md:px-16 md:py-12 grow">
+                            <div className="p-5 md:px-16 md:py-10 grow">
                                 <form
                                     className="space-y-6"
-                                    onSubmit="return false;">
+                                    onSubmit={handleRegister}>
                                     <div className="space-y-1">
                                         <label
                                             htmlFor="email"
@@ -91,7 +94,6 @@ const Register = () => {
                                                 className="grow bg-gray-100 rounded h-0.5 dark:bg-gray-700/75"
                                             />
                                         </div>
-                                        {/* END Divider: With Label */}
                                         <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 type="button"

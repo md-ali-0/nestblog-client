@@ -2,18 +2,16 @@ import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 
 const Login = () => {
+    const handleLogin = (e)=>{
+        e.preventDefault();
+    }
     return (
         <div
-            id="page-container"
             className="flex flex-col mx-auto w-full min-h-screen min-w-[320px] bg-gray-100 dark:text-gray-100 dark:bg-gray-900">
-            {/* Page Content */}
             <main
-                id="page-content"
                 className="flex flex-auto flex-col max-w-full">
-                <div className="min-h-screen flex items-center justify-center relative overflow-hidden max-w-10xl mx-auto p-4 lg:p-8 w-full">
-                    {/* Sign In Section */}
-                    <section className="py-6 w-full max-w-xl">
-                        {/* Header */}
+                <div className="min-h-screen flex items-center justify-center relative overflow-hidden max-w-10xl mx-auto p-4 lg:p-5 w-full">
+                    <section className="py-2 w-full max-w-xl">
                         <header className="mb-10 text-center">
                             <h1 className="text-2xl font-bold inline-flex items-center mb-2 space-x-2">
                                 <img
@@ -23,16 +21,19 @@ const Login = () => {
                                 />
                             </h1>
                             <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                Welcome, please sign in to your dashboard
+                                Welcome, Please Sign In
                             </h2>
                         </header>
-                        {/* END Header */}
-                        {/* Sign In Form */}
-                        <div className="flex flex-col rounded-lg shadow-sm bg-white overflow-hidden dark:text-gray-100 dark:bg-gray-800">
-                            <div className="p-5 md:px-16 md:py-12 grow">
+                        <div className="relative flex flex-col rounded-lg shadow-sm bg-white dark:text-gray-100 dark:bg-gray-800">
+                            <div className='flex justify-center'>
+                                <Link className='absolute -top-2 text-xs font-medium text-gray-800 bg-gray-100 rounded-full px-3 py-1 dark:bg-gray-700 dark:text-gray-200' to='/'>
+                                Back to Home
+                                </Link>
+                            </div>
+                            <div className="p-5 md:px-16 md:py-10 grow">
                                 <form
                                     className="space-y-6"
-                                    onSubmit="return false;">
+                                    onSubmit={handleLogin}>
                                     <div className="space-y-1">
                                         <label
                                             htmlFor="email"
@@ -62,24 +63,6 @@ const Login = () => {
                                         />
                                     </div>
                                     <div>
-                                        <div className="flex items-center justify-between space-x-2 mb-5">
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    id="remember_me"
-                                                    name="remember_me"
-                                                    className="border border-gray-200 rounded h-4 w-4 text-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:ring-offset-gray-900 dark:focus:border-blue-500 dark:checked:bg-blue-500 dark:checked:border-transparent"
-                                                />
-                                                <span className="text-sm ml-2">
-                                                    Remember me
-                                                </span>
-                                            </label>
-                                            <a
-                                                href="javascript:void(0)"
-                                                className="text-sm font-medium inline-block text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">
-                                                Forgot Password?
-                                            </a>
-                                        </div>
                                         <button
                                             type="submit"
                                             className="w-full inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-6 py-3 leading-6 border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-600 hover:border-blue-600 focus:ring focus:ring-blue-400 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700 dark:focus:ring-blue-400 dark:focus:ring-opacity-90">
@@ -95,7 +78,7 @@ const Login = () => {
                                                     clipRule="evenodd"
                                                 />
                                             </svg>
-                                            <span>Sign In</span>
+                                            <span>Sign Up</span>
                                         </button>
                                         {/* Divider: With Label */}
                                         <div className="flex items-center my-5">
@@ -104,14 +87,13 @@ const Login = () => {
                                                 className="grow bg-gray-100 rounded h-0.5 dark:bg-gray-700/75"
                                             />
                                             <span className="text-xs font-medium text-gray-800 bg-gray-100 rounded-full px-3 py-1 dark:bg-gray-700 dark:text-gray-200">
-                                                or sign in with
+                                                or sign up with
                                             </span>
                                             <span
                                                 aria-hidden="true"
                                                 className="grow bg-gray-100 rounded h-0.5 dark:bg-gray-700/75"
                                             />
                                         </div>
-                                        {/* END Divider: With Label */}
                                         <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 type="button"
@@ -154,12 +136,12 @@ const Login = () => {
                                     </div>
                                 </form>
                             </div>
-                            <div className="p-5 md:px-16 grow text-sm text-center bg-gray-50 dark:bg-gray-700/50">
+                            <div className="p-5 md:px-16 rounded-b-xl grow text-sm text-center bg-gray-50 dark:bg-gray-700/50">
                                 Don’t have an account yet?
                                 <Link
                                     to='/auth/register'
                                     className="font-medium text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">
-                                    Sign up
+                                    <span className='px-1 font-bold'>Sign Up</span>
                                 </Link>
                             </div>
                         </div>
