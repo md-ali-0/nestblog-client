@@ -4,13 +4,16 @@ import toast, { Toaster } from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
+import useAxios from '../../Hooks/useAxios';
 import useImageUpload from '../../Hooks/useImageUpload';
 import logo from '../../assets/logo.svg';
 
 const Register = () => {
-    const { createUser, updateUser, logOutUser } = useContext(AuthContext);
+    const { createUser, updateUser, logOutUser, googleLogin, setIsLoading } =
+        useContext(AuthContext);
     const [show, setShow] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const axios = useAxios();
     const { uploadImage } = useImageUpload();
     const {
         register,
@@ -22,27 +25,75 @@ const Register = () => {
     }, []);
 
     const onSubmit = async (data) => {
-        const { userName, picture, email, password } = data;
+        const { name, picture, email, password } = data;
+        const  loadingToast = toast.loading('Creating Account ... !!');
         try {
             const userResult = await createUser(email, password);
+            const user = userResult.user;
+            console.log(user);
+            const newUser = {
+                name: name,
+                email: user.email,
+                role: 'admin',
+                createdAt: user.metadata?.creationTime,
+                lastSignInTime: user.metadata?.lastSignInTime,
+            };
+            console.log(newUser);
             if (userResult.user?.email) {
                 try {
+                    await axios.post('/add-user', newUser)
                     const imageResult = await uploadImage(picture[0]);
                     if (imageResult) {
-                        await updateUser(userName, imageResult)
+                        await updateUser(name, imageResult);
+                        toast.dismiss(loadingToast);
                         toast.success('Successfully created!');
                         await logOutUser();
-                        navigate('/auth/login')
+                        navigate('/auth/login');
                     }
                 } catch (error) {
+                    setIsLoading(false)
                     console.log('Error image', error);
                 }
             }
         } catch (error) {
-            console.log('Error signup', error);
+            if ('auth/email-already-in-use' === error.code) {
+                toast.dismiss(loadingToast);
+                return toast.error('Email Already Used!');
+            }
+            setIsLoading(false)
+            toast.dismiss(loadingToast);
+            toast.error(error.code);
         }
     };
+    const handleGoogleLogin = async () => {
+        const  loadingToast = toast.loading('Creating Account ... !!');
+        try {
+            const googleLoginUser = await googleLogin();
+            if (googleLoginUser.user?.email) {
 
+                const user = googleLoginUser.user;
+                const newUser = {
+                    name: user.displayName,
+                    email: user.email,
+                    role: 'admin',
+                    createdAt: user.metadata?.creationTime,
+                    lastSignInTime: user.metadata?.lastSignInTime,
+                };
+                await axios.put('/edit-user', newUser)
+                toast.dismiss(loadingToast);
+                toast.success('Successfully created!');
+                await logOutUser();
+                navigate('/auth/login');
+            }
+        } catch (error) {
+            if ('auth/email-already-in-use' === error.code) {
+                return toast.error('Email Already Used!');
+            }
+            toast.dismiss(loadingToast);
+            setIsLoading(false)
+            toast.error(error.code);
+        }
+    };
     return (
         <div className="flex flex-col mx-auto w-full min-h-screen min-w-[320px] bg-gray-100 dark:text-gray-100 dark:bg-gray-900">
             <main className="flex flex-auto flex-col max-w-full">
@@ -76,29 +127,25 @@ const Register = () => {
                                         <label
                                             htmlFor="userName"
                                             className="text-sm font-medium">
-                                            User Name
+                                            Full Name
                                         </label>
                                         <input
                                             type="text"
-                                            {...register('userName', {
+                                            {...register('name', {
                                                 required:
-                                                    'User Name is required.',
+                                                    'Name is required.',
                                                 minLength: {
                                                     value: 5,
                                                     message:
-                                                        'User Name should be at least 5 characters.',
+                                                        'Name should be at least 5 characters.',
                                                 },
                                                 maxLength: {
                                                     value: 15,
                                                     message:
-                                                        'User Name should not exceed 15 characters.',
+                                                        'Name should not exceed 15 characters.',
                                                 },
-                                                pattern:{
-                                                    value: /\s/,
-                                                    message: 'User Name should not be with space.'
-                                                }
                                             })}
-                                            placeholder="Enter User Name"
+                                            placeholder="Enter Full Name"
                                             className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                         />
                                         {errors.name && (
@@ -106,7 +153,7 @@ const Register = () => {
                                                 <BiErrorCircle
                                                     className="inline-block ml-2"
                                                     size={15}
-                                                />{' '}
+                                                />
                                                 {errors.name?.message}
                                             </span>
                                         )}
@@ -296,6 +343,7 @@ const Register = () => {
                                         <div className="grid grid-cols-2 gap-2">
                                             <button
                                                 type="button"
+                                                onClick={handleGoogleLogin}
                                                 className="inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-3 py-2 leading-5 text-sm border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm focus:ring focus:ring-gray-300 focus:ring-opacity-25 active:border-gray-200 active:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-gray-200 dark:focus:ring-gray-600 dark:focus:ring-opacity-40 dark:active:border-gray-700">
                                                 <svg
                                                     className="bi bi-facebook inline-block w-4 h-4"
@@ -320,6 +368,7 @@ const Register = () => {
                                             </button>
                                             <button
                                                 type="button"
+                                                
                                                 className="inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-3 py-2 leading-5 text-sm border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm focus:ring focus:ring-gray-300 focus:ring-opacity-25 active:border-gray-200 active:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-gray-200 dark:focus:ring-gray-600 dark:focus:ring-opacity-40 dark:active:border-gray-700">
                                                 <svg
                                                     className="bi bi-twitter inline-block w-4 h-4 text-[#1da1f2]"

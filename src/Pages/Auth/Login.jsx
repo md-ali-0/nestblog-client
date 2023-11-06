@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 
@@ -151,6 +152,7 @@ const Login = () => {
                                 </Link>
                             </div>
                         </div>
+                        <Toaster />
                     </section>
                 </div>
             </main>
