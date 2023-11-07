@@ -3,24 +3,34 @@ import {
     DarkThemeToggle,
     Dropdown,
     Flowbite,
-    Navbar
+    Navbar,
 } from 'flowbite-react';
 import { useContext, useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import logo from '../assets/logo.svg';
-import Loading from '../components/loading';
+// import Loading from '../components/loading';
 
 const Header = () => {
-    const {user, isLoading} = useContext(AuthContext)
+    const { user, isLoading, logOutUser, setIsLoading } = useContext(AuthContext);
     useEffect(() => {
-        window.scrollTo(0, 0)
-      }, [])
-
-    if (isLoading) {
-        return <Loading/>
-    }
+        window.scrollTo(0, 0);
+    }, []);
+    // if (isLoading) {
+    //     return <Loading />;
+    // }
+    const handlelogOutUser = async () => {
+        try {
+            await logOutUser();
+            console.log('afterlogout');
+            toast.success('LogOut success!');
+        } catch (err) {
+            console.log(err);
+            setIsLoading(false)
+            toast.error('LogOut Error!');
+        }
+    };
     return (
         <Flowbite>
             <header>
@@ -60,13 +70,23 @@ const Header = () => {
                                 <Dropdown.Item>Settings</Dropdown.Item>
                                 <Dropdown.Item>Earnings</Dropdown.Item>
                                 <Dropdown.Divider />
-                                <Dropdown.Item>Sign out</Dropdown.Item>
+                                <Dropdown.Item onClick={handlelogOutUser}>
+                                    Sign out
+                                </Dropdown.Item>
                             </Dropdown>
                         ) : (
                             <div className="flex justify-center gap-2">
-                            <Link to='/auth/login' className="inline-flex text-white bg-primary border-0 py-1.5 px-3 focus:outline-none hover:bg-blue-500 rounded text-lg">Login</Link>
-                            <Link to='/auth/register' className="inline-flex text-gray-700 bg-gray-100 border-0 py-1.5 px-3 focus:outline-none hover:bg-gray-200 rounded text-lg dark:bg-[#1F2937] dark:text-gray-400">Register</Link>
-                          </div>
+                                <Link
+                                    to="/login"
+                                    className="inline-flex text-white bg-primary border-0 py-1.5 px-3 focus:outline-none hover:bg-blue-500 rounded text-lg">
+                                    Login
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="inline-flex text-gray-700 bg-gray-100 border-0 py-1.5 px-3 focus:outline-none hover:bg-gray-200 rounded text-lg dark:bg-[#1F2937] dark:text-gray-400">
+                                    Register
+                                </Link>
+                            </div>
                         )}
                         <Navbar.Toggle />
                     </div>

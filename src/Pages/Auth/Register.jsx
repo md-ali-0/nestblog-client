@@ -1,12 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import useAxios from '../../Hooks/useAxios';
 import useImageUpload from '../../Hooks/useImageUpload';
-import logo from '../../assets/logo.svg';
 
 const Register = () => {
     const { createUser, updateUser, logOutUser, googleLogin, setIsLoading } =
@@ -48,7 +47,7 @@ const Register = () => {
                         toast.dismiss(loadingToast);
                         toast.success('Successfully created!');
                         await logOutUser();
-                        navigate('/auth/login');
+                        navigate('/login');
                     }
                 } catch (error) {
                     setIsLoading(false)
@@ -100,25 +99,11 @@ const Register = () => {
                 <div className="min-h-screen flex items-center justify-center relative overflow-hidden max-w-10xl mx-auto p-4 lg:p-5 w-full">
                     <section className="py-2 w-full max-w-xl">
                         <header className="mb-10 text-center">
-                            <h1 className="text-2xl font-bold inline-flex items-center mb-2 space-x-2">
-                                <img
-                                    src={logo}
-                                    className="mr-3 h-6 md:h-9 dark:invert"
-                                    alt="Kotha Logo"
-                                />
-                            </h1>
-                            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            <h2 className="text-xl font-medium text-gray-500 dark:text-gray-400">
                                 Welcome, Please Sign Up
                             </h2>
                         </header>
-                        <div className="relative flex flex-col rounded-lg shadow-sm bg-white dark:text-gray-100 dark:bg-gray-800">
-                            <div className="flex justify-center">
-                                <Link
-                                    className="absolute -top-2 text-xs font-medium text-gray-800 bg-gray-100 rounded-full px-3 py-1 dark:bg-gray-700 dark:text-gray-200"
-                                    to="/">
-                                    Back to Home
-                                </Link>
-                            </div>
+                        <div className="flex flex-col rounded-lg shadow-sm bg-white dark:text-gray-100 dark:bg-gray-800">
                             <div className="p-5 md:px-16 md:py-10 grow">
                                 <form
                                     className="space-y-6"
@@ -387,7 +372,7 @@ const Register = () => {
                             <div className="p-5 md:px-16 rounded-b-xl grow text-sm text-center bg-gray-50 dark:bg-gray-700/50">
                                 Don’t have an account yet?
                                 <Link
-                                    to="/auth/login"
+                                    to="/login"
                                     className="font-medium text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300">
                                     <span className="px-1 font-bold">
                                         Login
@@ -395,7 +380,6 @@ const Register = () => {
                                 </Link>
                             </div>
                         </div>
-                        <Toaster />
                     </section>
                 </div>
             </main>
