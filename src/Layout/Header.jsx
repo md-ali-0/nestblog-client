@@ -93,15 +93,49 @@ const Header = () => {
                     <Navbar.Collapse>
                         <NavLink
                             to="/"
-                            className="block py-2 pr-4 pl-3 md:p-0 bg-cyan-700 text-white dark:text-white md:bg-transparent md:text-cyan-700">
+                            className={({ isActive }) =>
+                            isActive
+                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                        }>
                             Home
                         </NavLink>
-                        <Navbar.Link href="/blogs">All blogs</Navbar.Link>
-                        <Navbar.Link href="/featured-blogs">
+                        <NavLink
+                            to="/blogs"
+                            className={({ isActive }) =>
+                            isActive
+                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                        }>
+                            All blogs
+                        </NavLink>
+                        <NavLink
+                            to="/featured-blogs"
+                            className={({ isActive }) =>
+                            isActive
+                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                        }>
                             Featured Blogs
-                        </Navbar.Link>
-                        <Navbar.Link href="/about">About</Navbar.Link>
-                        <Navbar.Link href="/contact">Contact</Navbar.Link>
+                        </NavLink>
+                        <NavLink
+                            to="/about"
+                            className={({ isActive }) =>
+                            isActive
+                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                        }>
+                            About
+                        </NavLink>
+                        <NavLink
+                            to="/contact"
+                            className={({ isActive }) =>
+                            isActive
+                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                        }>
+                            Contact
+                        </NavLink>
                     </Navbar.Collapse>
                 </Navbar>
                 <Toaster />
