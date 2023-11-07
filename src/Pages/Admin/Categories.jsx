@@ -1,17 +1,66 @@
-
+import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
+import useAxios from '../../Hooks/useAxios';
+import Loading from '../../components/Loading';
+
+import { getTheme } from '@table-library/react-table-library/baseline';
+import {
+    Body,
+    Cell,
+    Header,
+    HeaderCell,
+    HeaderRow,
+    Row,
+    Table,
+} from '@table-library/react-table-library/table';
+import { useTheme } from '@table-library/react-table-library/theme';
+import { Link } from 'react-router-dom';
 
 const Categories = () => {
-
+ 
+    const axios = useAxios();
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm();
-    const onSubmit = (data) => {
-        console.log(data);
+
+    const {
+        data: categories,
+        refetch,
+        isLoading,
+    } = useQuery({
+        queryKey: ['categories'],
+        queryFn: () => axios.get('/categories'),
+    });
+    const theme = useTheme(getTheme());
+    if (isLoading) {
+        return <Loading />;
+    }
+    const nodes = [...categories.data.result];
+    const data = { nodes };
+
+    const onSubmit = async (data) => {
+        try {
+            const res = await axios.post('/add-category', data);
+            if (res.data?.acknowledged) {
+                toast.success('Category Added');
+                reset();
+                refetch();
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+
+
+    console.log(nodes);
+    console.log(data);
+
     return (
         <div className="p-4 sm:ml-64">
             <div className="p-5 flex gap-2 mt-16">
@@ -114,7 +163,31 @@ const Categories = () => {
                     </form>
                 </div>
                 <div className="border-gray-200 rounded-lg p-5 bg-white dark:bg-gray-800 dark:border-gray-700 md:w-1/2">
-                    sss
+                    <Table data={data} theme={theme}>
+                        {(tableList) => (
+                            <>
+                                <Header>
+                                    <HeaderRow>
+                                        <HeaderCell>Category Name</HeaderCell>
+                                        <HeaderCell>Description</HeaderCell>
+                                        <HeaderCell>Keyword</HeaderCell>
+                                        <HeaderCell>Action</HeaderCell>
+                                    </HeaderRow>
+                                </Header>
+
+                                <Body>
+                                    {tableList.map((item) => (
+                                        <Row key={item._id} item={item} h>
+                                            <Cell>{item.categoryName}</Cell>
+                                            <Cell>{item.categoryDescription}</Cell>
+                                            <Cell>{item.categoryKeywords}</Cell>
+                                            <Cell ><Link className='bg-blue-500 rounded text-white py-0.5 px-2' to={`/edit-category/${item._id}`}>Edit</Link></Cell>
+                                        </Row>
+                                    ))}
+                                </Body>
+                            </>
+                        )}
+                    </Table>
                 </div>
             </div>
         </div>

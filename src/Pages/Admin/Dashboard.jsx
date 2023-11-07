@@ -1,4 +1,21 @@
+import { useQuery } from '@tanstack/react-query';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import useAxios from "../../Hooks/useAxios";
+import Loading from '../../components/Loading';
+
 const Dashboard = () => {
+    const axios = useAxios()
+    const {
+        data: total,
+        isLoading
+    } = useQuery({
+        queryKey: ['categories'],
+        queryFn: () => axios.get('/categories'),
+    });
+    if (isLoading) {
+        return <Loading/>
+    }
     return (
         <div className="p-4 sm:ml-64">
             <div className="p-4 border-gray-200 rounded-lg dark:border-gray-700 mt-14">
@@ -104,10 +121,11 @@ const Dashboard = () => {
                         </div>
                         <div className="p-4 text-right">
                             <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                                Categories
+                                
+                                {'Categories' || <Skeleton />}
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                0
+                                {total.data.totalCategories || <Skeleton />}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
