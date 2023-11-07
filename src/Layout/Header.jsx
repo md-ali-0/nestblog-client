@@ -66,9 +66,9 @@ const Header = () => {
                                         {user?.email}
                                     </span>
                                 </Dropdown.Header>
-                                <Dropdown.Item>Dashboard</Dropdown.Item>
-                                <Dropdown.Item>Settings</Dropdown.Item>
-                                <Dropdown.Item>Earnings</Dropdown.Item>
+                                <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin/dashboard">Dashboard</Link>
+                                    <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin/dashboard">Profile</Link>
+                                    <Dropdown.Item>Settings</Dropdown.Item>
                                 <Dropdown.Divider />
                                 <Dropdown.Item onClick={handlelogOutUser}>
                                     Sign out

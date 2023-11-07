@@ -1,9 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
+import Admin from "../Layout/Admin/Admin";
 import Root from "../Layout/Root";
 import About from "../Pages/About/About";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import Contact from "../Pages/Contact/Contact";
+import Dashboard from "../Pages/Dashboard/Dashboard";
 import Error404 from "../Pages/Error/Error404";
 import Home from "../Pages/Home/Home";
 
@@ -35,6 +37,16 @@ const Router = createBrowserRouter([
             },
         ]
     },
+    {
+        path: '/admin',
+        element: <Admin/>,
+        children: [
+            {
+                path: 'dashboard',
+                element: <Dashboard/>
+            }
+        ]
+    }
 ])
 
 export default Router;
