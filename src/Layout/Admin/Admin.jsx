@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Dashboard from "../../Pages/Dashboard/Dashboard";
+import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import DashboardSidebar from "./Sidebar";
 
@@ -10,7 +10,7 @@ const Admin = () => {
         <>
             <Header openSide={openSide} setOpenSide={setOpenSide}/>
             <DashboardSidebar openSide={openSide}/>
-            <Dashboard/>
+            <Outlet/>
         </>
     );
 };
