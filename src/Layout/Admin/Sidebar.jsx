@@ -84,7 +84,7 @@ const DashboardSidebar = ({ openSide }) => {
                         </li>
                         <li className="">
                             <NavLink
-                                to="/admin/add-post"
+                                to="/admin/all-post"
                                 aria-labelledby="flowbite-sidebar-item-:r21:"
                                 className="flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 group w-full pl-8 transition duration-75"
                                 href="#">

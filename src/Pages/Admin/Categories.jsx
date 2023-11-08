@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import Swal from 'sweetalert2';
 import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
@@ -19,7 +21,6 @@ import { useTheme } from '@table-library/react-table-library/theme';
 import { Link } from 'react-router-dom';
 
 const Categories = () => {
- 
     const axios = useAxios();
     const {
         register,
@@ -37,6 +38,7 @@ const Categories = () => {
         queryFn: () => axios.get('/categories'),
     });
     const theme = useTheme(getTheme());
+
     if (isLoading) {
         return <Loading />;
     }
@@ -55,15 +57,44 @@ const Categories = () => {
             console.log(error);
         }
     };
-
-
-
-    console.log(nodes);
-    console.log(data);
-
+    const delteCategory = async (id) => {
+        try {
+            const isConfirm = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            });
+            if (isConfirm.isConfirmed) {
+                const result = await axios.delete(`/delete-category/${id}`);
+                console.log(result);
+                if (result?.data?.acknowledged) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success',
+                    );
+                    refetch();
+                }
+            } else if (isConfirm.dismiss === Swal.DismissReason.cancel) {
+                {
+                    Swal.fire(
+                        'Cancelled',
+                        'Your imaginary file is safe :)',
+                        'error',
+                    );
+                }
+            }
+        } catch (error) {
+            Swal.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
+        }
+    };
     return (
         <div className="p-4 sm:ml-64">
-            <div className="p-5 flex gap-2 mt-16">
+            <div className="p-5 flex flex-col md:flex-row gap-2 mt-16">
                 <div className="border-gray-200 p-5 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 md:w-1/2">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-2">
@@ -177,11 +208,36 @@ const Categories = () => {
 
                                 <Body>
                                     {tableList.map((item) => (
-                                        <Row key={item._id} item={item} h>
+                                        <Row key={item._id} item={item}>
                                             <Cell>{item.categoryName}</Cell>
-                                            <Cell>{item.categoryDescription}</Cell>
+                                            <Cell>
+                                                {item.categoryDescription}
+                                            </Cell>
                                             <Cell>{item.categoryKeywords}</Cell>
-                                            <Cell ><Link className='bg-blue-500 rounded text-white py-0.5 px-2' to={`/edit-category/${item._id}`}>Edit</Link></Cell>
+                                            <Cell>
+                                                <div className="flex justify-center items-center gap-1">
+                                                    <Link
+                                                        to={`/admin/edit-category/${item._id}`}
+                                                        className="bg-blue-500 rounded text-white px-1.5 py-0.5">
+                                                        <FiEdit
+                                                            size={15}
+                                                            className="inline"
+                                                        />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() =>
+                                                            delteCategory(
+                                                                item._id,
+                                                            )
+                                                        }
+                                                        className="bg-red-500 rounded text-white px-1.5 py-0.5">
+                                                        <FiTrash2
+                                                            size={15}
+                                                            className="inline"
+                                                        />
+                                                    </button>
+                                                </div>
+                                            </Cell>
                                         </Row>
                                     ))}
                                 </Body>
