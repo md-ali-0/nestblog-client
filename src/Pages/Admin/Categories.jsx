@@ -70,7 +70,6 @@ const Categories = () => {
             });
             if (isConfirm.isConfirmed) {
                 const result = await axios.delete(`/delete-category/${id}`);
-                console.log(result);
                 if (result?.data?.acknowledged) {
                     Swal.fire(
                         'Deleted!',

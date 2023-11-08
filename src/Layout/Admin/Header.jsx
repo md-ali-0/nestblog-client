@@ -8,14 +8,11 @@ import logo from '../../assets/logo.svg';
 // import Loading from '../components/loading';
 
 const Header = ({ openSide, setOpenSide }) => {
-    const { user, isLoading, logOutUser, setIsLoading } =
+    const { user, logOutUser, setIsLoading } =
         useContext(AuthContext);
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    // if (isLoading) {
-    //     return <Loading />;
-    // }
     const handlelogOutUser = async () => {
         try {
             await logOutUser();
@@ -101,14 +98,15 @@ const Header = ({ openSide, setOpenSide }) => {
                                     <Link
                                         className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
                                         to="/admin">
-                                        Dashboard
+                                        Admin
                                     </Link>
+                                    <Dropdown.Divider />
                                     <Link
                                         className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
-                                        to="/admin/dashboard">
-                                        Profile
+                                        to="/admin/add-post">
+                                        Add Blog
                                     </Link>
-                                    <Dropdown.Item>Settings</Dropdown.Item>
+
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={handlelogOutUser}>
                                         Sign out

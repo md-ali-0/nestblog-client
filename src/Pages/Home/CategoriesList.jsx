@@ -15,7 +15,6 @@ const CategoriesList = () => {
     if (isLoading) {
         return <Loading />;
     }
-    console.log(categories.data);
     return (
         <div>
             <div className="">

@@ -36,6 +36,7 @@ const Login = () => {
                         createdAt: user.metadata?.creationTime,
                         lastSignInTime: user.metadata?.lastSignInTime,
                     };
+                    console.log(userResult.user);
                     await axios.put('/edit-user', newUser)
                     toast.dismiss(loadingToast);
                     toast.success('Successfully Logined!');

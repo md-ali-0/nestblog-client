@@ -13,7 +13,6 @@ const Featured = () => {
     if (isLoading) {
         return <Loading />;
     }
-    console.log(featuredPosts.data);
     return (
         <div>
             <h3 className="text-4xl font-bold pb-3">Featured Blogs</h3>
@@ -39,7 +38,7 @@ const Featured = () => {
                         <p className="text-sm">
                             By
                             <span
-                                className="text-blue-600 hover:underline">
+                                className="text-blue-600 hover:underline mx-1">
                                 {post.author}
                             </span>
                         </p>

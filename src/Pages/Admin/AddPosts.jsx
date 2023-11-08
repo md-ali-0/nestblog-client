@@ -37,7 +37,7 @@ const AddPosts = () => {
         try {
             const imageResult = await uploadImage(image[0]);
             if (imageResult) {
-                const newPost = { title, image:imageResult, category, shortDescription, longDescription, createdBy:user.email, author:user.displayName, createdAt: new Date()}
+                const newPost = { title, image:imageResult, category, shortDescription, longDescription, createdBy:user.email, author:user.displayName, authorImage:user.photoURL, createdAt: new Date()}
                 const res = await axios.post('/add-post', newPost);
                 if (res.data?.acknowledged) {
                     toast.dismiss(loadingToast);

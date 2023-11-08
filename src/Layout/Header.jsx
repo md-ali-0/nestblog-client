@@ -10,16 +10,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import logo from '../assets/logo.svg';
-// import Loading from '../components/loading';
 
 const Header = () => {
-    const { user, isLoading, logOutUser, setIsLoading } = useContext(AuthContext);
+    const { user, logOutUser, setIsLoading } = useContext(AuthContext);
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    // if (isLoading) {
-    //     return <Loading />;
-    // }
     const handlelogOutUser = async () => {
         try {
             await logOutUser();
@@ -66,9 +62,9 @@ const Header = () => {
                                         {user?.email}
                                     </span>
                                 </Dropdown.Header>
-                                <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin">Dashboard</Link>
-                                    <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin/dashboard">Profile</Link>
-                                    <Dropdown.Item>Settings</Dropdown.Item>
+                                <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin">Admin</Link>
+                                <Dropdown.Divider />
+                                <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin/add-post">Add Blog</Link>
                                 <Dropdown.Divider />
                                 <Dropdown.Item onClick={handlelogOutUser}>
                                     Sign out
@@ -101,7 +97,7 @@ const Header = () => {
                             Home
                         </NavLink>
                         <NavLink
-                            to="/blogs"
+                            to="/all-blogs"
                             className={({ isActive }) =>
                             isActive
                                 ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
@@ -135,6 +131,15 @@ const Header = () => {
                                 : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
                         }>
                             Contact
+                        </NavLink>
+                        <NavLink
+                            to="/wishlist"
+                            className={({ isActive }) =>
+                            isActive
+                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                        }>
+                            Wishlist
                         </NavLink>
                     </Navbar.Collapse>
                 </Navbar>

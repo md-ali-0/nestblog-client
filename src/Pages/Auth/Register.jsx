@@ -29,7 +29,6 @@ const Register = () => {
         try {
             const userResult = await createUser(email, password);
             const user = userResult.user;
-            console.log(user);
             const newUser = {
                 name: name,
                 email: user.email,
@@ -37,7 +36,6 @@ const Register = () => {
                 createdAt: user.metadata?.creationTime,
                 lastSignInTime: user.metadata?.lastSignInTime,
             };
-            console.log(newUser);
             if (userResult.user?.email) {
                 try {
                     await axios.post('/add-user', newUser)

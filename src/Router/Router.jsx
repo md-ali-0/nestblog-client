@@ -10,10 +10,16 @@ import Dashboard from "../Pages/Admin/Dashboard";
 import EditPosts from "../Pages/Admin/PostEdit";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
+import AllBlogs from "../Pages/Blogs/AllBlogs";
+import BlogDetail from "../Pages/Blogs/BlogDetail";
+import FeaturedBlogs from "../Pages/Blogs/FeaturedBlogs";
+import UpdateComment from "../Pages/Blogs/UpdateComment";
 import BlogByCategory from "../Pages/Categories/BlogByCategory";
 import Contact from "../Pages/Contact/Contact";
 import Error404 from "../Pages/Error/Error404";
 import Home from "../Pages/Home/Home";
+import Wishlist from "../Pages/Wishlist/Wishlist";
+import PrivateRouter from "./PrivateRouter";
 
 const Router = createBrowserRouter([
     {
@@ -46,6 +52,28 @@ const Router = createBrowserRouter([
                 loader: ({params})=>fetch(`http://localhost:8080/blog-by-category/${params.name}`),
                 element: <BlogByCategory/>
             },
+            {
+                path: '/all-blogs',
+                element: <PrivateRouter><AllBlogs/></PrivateRouter>
+            },
+            {
+                path: '/wishlist',
+                element: <PrivateRouter><Wishlist/></PrivateRouter>
+            },
+            {
+                path: '/featured-blogs',
+                element: <PrivateRouter><FeaturedBlogs/></PrivateRouter>
+            },
+            {
+                path: '/blog/:id',
+                loader: ({params})=>fetch(`http://localhost:8080/post/${params.id}`),
+                element: <PrivateRouter><BlogDetail/></PrivateRouter>
+            },
+            {
+                path: '/update-comment/:id',
+                loader: ({params})=>fetch(`http://localhost:8080/comment/${params.id}`),
+                element: <PrivateRouter><UpdateComment/></PrivateRouter>
+            }
         ]
     },
     {
@@ -54,29 +82,29 @@ const Router = createBrowserRouter([
         children: [
             {
                 path: '/admin',
-                element: <Dashboard/>
+                element: <PrivateRouter><Dashboard/></PrivateRouter>
             },
             {
                 path: 'categories',
-                element: <Categories/>
+                element: <PrivateRouter><Categories/></PrivateRouter>
             },
             {
                 path: 'edit-category/:id',
                 loader: ({params})=>fetch(`http://localhost:8080/category/${params.id}`),
-                element: <CategoryEdit/>
+                element: <PrivateRouter><CategoryEdit/></PrivateRouter>
             },
             {
                 path: 'add-post',
-                element: <AddPosts/>
+                element: <PrivateRouter><AddPosts/></PrivateRouter>
             },
             {
                 path: 'all-post',
-                element: <AllPosts/>
+                element: <PrivateRouter><AllPosts/></PrivateRouter>
             },
             {
                 path: 'edit-post/:id',
                 loader: ({params})=>fetch(`http://localhost:8080/post/${params.id}`),
-                element: <EditPosts/>
+                element: <PrivateRouter><EditPosts/></PrivateRouter>
             },
         ]
     }

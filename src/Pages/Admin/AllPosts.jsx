@@ -38,8 +38,7 @@ const AllPosts = () => {
             });
             if (isConfirm.isConfirmed) {
                 const result = await axios.delete(`/delete-post/${id}`);
-                console.log(result);
-                if (result?.data?.acknowledged) {
+                if (result?.data?.deletedCount) {
                     Swal.fire(
                         'Deleted!',
                         'Your Post has been deleted.',

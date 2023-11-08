@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { Pagination } from 'flowbite-react';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FiHeart } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../Context/AuthContext';
 import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
@@ -12,7 +14,7 @@ const LatestBlogs = () => {
     const [totalPost, setTotalPost] = useState(0);
     const [postPerPage, setPostPerPage] = useState(6);
     const totalPage = Math.ceil(totalPost / postPerPage);
-
+    const {user} = useContext(AuthContext)
     const onPageChange = (page) => setCurrentPage(page);
     const axios = useAxios();
 
@@ -32,6 +34,19 @@ const LatestBlogs = () => {
             .get('/dashboard-count')
             .then((res) => setTotalPost(res.data.postCount));
     }, [axios]);
+    const handleWishList = async(post)=>{
+        const email = user?.email
+        const addWishListBlog = {...post, user:email}
+        console.log(addWishListBlog);
+        try {
+            const res = await axios.post('/add-to-wishlist', addWishListBlog);
+            if (res.data?.acknowledged) {
+                toast.success('Wishlist Added!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     if (isLoading) {
         return <Loading />;
     }
@@ -50,7 +65,8 @@ const LatestBlogs = () => {
                             alt="News Image"
                             className="w-full h-96 object-cover object-center"
                         />
-                        <FiHeart className='absolute top-5 right-5 text-white cursor-pointer' size={25}/>
+                        {user&&<FiHeart onClick={()=>{handleWishList(post)}} className='absolute top-5 right-5 text-white cursor-pointer' size={25}/>}
+                        
                         <span className="absolute top-5 left-5 rounded-xl bg-primary text-white px-2 py-0.5">
                             {post.category}
                         </span>
@@ -61,7 +77,7 @@ const LatestBlogs = () => {
                         </h3>
                         <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
                             Published on{' '}
-                            {new Date(post.createdAt).toLocaleString()} by{' '}
+                            {new Date(post.createdAt).toDateString()} by{' '}
                             {post.author}
                         </p>
                         <p className="text-body-color dark:text-dark-6">
