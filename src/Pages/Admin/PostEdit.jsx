@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
 import { useLoaderData } from 'react-router-dom';
+import { AuthContext } from '../../Context/AuthContext';
 import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
 const EditPosts = () => {
     const post = useLoaderData();
+    const {user} = useContext(AuthContext)
     const axios = useAxios();
     const {
         register,
@@ -33,7 +36,7 @@ const EditPosts = () => {
         const  loadingToast = toast.loading('Updating Blog Post ... !!');
         try {
             const updatePost = { title, image, category, shortDescription, longDescription, updatedAt: new Date()}
-            const res = await axios.put(`/edit-post/${post._id}`, updatePost);
+            const res = await axios.put(`/edit-post/${post._id}`, {...updatePost,email:user.email});
             if (res.data?.acknowledged) {
                 toast.dismiss(loadingToast);
                 toast.success('Blog Post Updated');

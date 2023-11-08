@@ -148,7 +148,7 @@ const BlogDetail = () => {
                     </div>
                     {user && (
                         <div className="m-5">
-                            {createdBy !== user?.email ? (
+                            {createdBy == user.email ? (
                                 <Link
                                     className="bg-blue-500 rounded text-white px-1 py-0.5"
                                     to={`/admin/edit-post/${_id}`}>
@@ -220,11 +220,15 @@ const BlogDetail = () => {
                                         </p>
                                     </div>
                                     {user && (
-                                        <Link
-                                            className="bg-blue-500 rounded text-white px-1 py-0.5"
-                                            to={`/update-comment/${comment._id}`}>
-                                            Edit
-                                        </Link>
+                                        <div>
+                                            {comment.email == user.email ? (
+                                                <Link
+                                                    className="bg-blue-500 rounded text-white px-1 py-0.5"
+                                                    to={`/update-comment/${comment._id}`}>
+                                                    Edit
+                                                </Link>
+                                            ) : null}
+                                        </div>
                                     )}
                                 </footer>
                                 <p className="text-gray-500 dark:text-gray-400">

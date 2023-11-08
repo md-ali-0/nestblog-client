@@ -8,7 +8,7 @@ const Featured = () => {
     const axios = useAxios();
     const { data: featuredPosts, isLoading } = useQuery({
         queryKey: ['featuredposts'],
-        queryFn: () => axios.get('/featured-post'),
+        queryFn: () => axios.get('/featured-post-home'),
     });
     if (isLoading) {
         return <Loading />;
