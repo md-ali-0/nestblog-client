@@ -1,4 +1,5 @@
 import Banner from './Banner';
+import CategoriesList from './CategoriesList';
 import Featured from './Featured';
 import LatestBlogs from './LatestBlogs';
 
@@ -13,6 +14,7 @@ const Home = () => {
                     </div>
                     <div className="col-span-2">
                         <Featured/>
+                        <CategoriesList/>
                         
                     </div>
                 </div>

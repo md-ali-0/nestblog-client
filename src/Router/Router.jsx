@@ -10,6 +10,7 @@ import Dashboard from "../Pages/Admin/Dashboard";
 import EditPosts from "../Pages/Admin/PostEdit";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
+import BlogByCategory from "../Pages/Categories/BlogByCategory";
 import Contact from "../Pages/Contact/Contact";
 import Error404 from "../Pages/Error/Error404";
 import Home from "../Pages/Home/Home";
@@ -39,6 +40,11 @@ const Router = createBrowserRouter([
             {
                 path: '/contact',
                 element: <Contact/>
+            },
+            {
+                path: '/category/:name',
+                loader: ({params})=>fetch(`http://localhost:8080/blog-by-category/${params.name}`),
+                element: <BlogByCategory/>
             },
         ]
     },

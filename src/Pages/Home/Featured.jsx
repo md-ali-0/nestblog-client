@@ -26,9 +26,9 @@ const Featured = () => {
                         <img
                             src={post.image}
                             alt="Featured Post"
-                            className="h-32 w-32 object-fill rounded-l-lg"
+                            className="h-36 w-32 object-fill rounded-l-lg"
                         />
-                    <div className="text-gray-700 dark:text-gray-400 px-3">
+                    <div className="text-gray-700 dark:text-gray-400 px-3 pt-1">
                         <h3 className="text-lg font-semibold leading-tight mb-2">
                             <Link
                                 to={`/blog/${post._id}`}
