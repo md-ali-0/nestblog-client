@@ -83,7 +83,7 @@ const Wishlist = () => {
                                             onClick={() => {
                                                 handleWishListDelete(post._id);
                                             }}
-                                            className="absolute top-5 right-5 text-white cursor-pointer"
+                                            className="absolute top-5 right-5 text-red-500 bg-gray-200 shadow-xl cursor-pointer rounded p-0.5"
                                             size={25}
                                         />
                                     )}

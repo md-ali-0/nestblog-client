@@ -2,14 +2,14 @@ import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import useAxios from '../../Hooks/useAxios';
 
 const Login = () => {
-    const { loginUser, googleLogin, setIsLoading } =
-        useContext(AuthContext);
+    const { loginUser, googleLogin, setIsLoading } = useContext(AuthContext);
     const [show, setShow] = useState(false);
+    const location = useLocation();
     const navigate = useNavigate();
     const axios = useAxios();
     const {
@@ -23,7 +23,7 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         const { email, password } = data;
-        const  loadingToast = toast.loading('Login in Account ...');
+        const loadingToast = toast.loading('Login in Account ...');
         try {
             const userResult = await loginUser(email, password);
             const user = userResult.user;
@@ -36,34 +36,37 @@ const Login = () => {
                         createdAt: user.metadata?.creationTime,
                         lastSignInTime: user.metadata?.lastSignInTime,
                     };
-                    console.log(userResult.user);
-                    await axios.put('/edit-user', newUser)
+                    await axios.put('/edit-user', newUser);
                     toast.dismiss(loadingToast);
                     toast.success('Successfully Logined!');
-                    navigate('/');
+
+                    const userJWT = { email: user.email };
+                    axios
+                        .post('/jwt', userJWT)
+                        .then((res) => console.log(res.data))
+                        .catch(err=>console.log(err))
+                    navigate(location?.state ? location.state : '/');
                 } catch (error) {
-                    setIsLoading(false)
+                    setIsLoading(false);
                     console.log('Error Login', error);
                 }
             }
-
         } catch (error) {
             if ('auth/invalid-login-credentials' === error.code) {
                 toast.dismiss(loadingToast);
-                setIsLoading(false)
+                setIsLoading(false);
                 return toast.error('Email or Password Wrong!');
             }
-            setIsLoading(false)
+            setIsLoading(false);
             toast.dismiss(loadingToast);
             toast.error(error.code);
         }
     };
     const handleGoogleLogin = async () => {
-        const  loadingToast = toast.loading('Login in Account ...');
+        const loadingToast = toast.loading('Login in Account ...');
         try {
             const googleLoginUser = await googleLogin();
             if (googleLoginUser.user?.email) {
-
                 const user = googleLoginUser.user;
                 const newUser = {
                     name: user.displayName,
@@ -72,14 +75,14 @@ const Login = () => {
                     createdAt: user.metadata?.creationTime,
                     lastSignInTime: user.metadata?.lastSignInTime,
                 };
-                await axios.put('/edit-user', newUser)
+                await axios.put('/edit-user', newUser);
                 toast.dismiss(loadingToast);
                 toast.success('Successfully logined!');
                 navigate('/');
             }
         } catch (error) {
             toast.dismiss(loadingToast);
-            setIsLoading(false)
+            setIsLoading(false);
             toast.error(error.code);
         }
     };
@@ -230,7 +233,7 @@ const Login = () => {
                                                 className="grow bg-gray-100 rounded h-0.5 dark:bg-gray-700/75"
                                             />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-1">
                                             <button
                                                 type="button"
                                                 onClick={handleGoogleLogin}
@@ -255,20 +258,6 @@ const Login = () => {
                                                         d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
                                                 </svg>
                                                 <span>Google</span>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                
-                                                className="inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-3 py-2 leading-5 text-sm border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm focus:ring focus:ring-gray-300 focus:ring-opacity-25 active:border-gray-200 active:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-gray-200 dark:focus:ring-gray-600 dark:focus:ring-opacity-40 dark:active:border-gray-700">
-                                                <svg
-                                                    className="bi bi-twitter inline-block w-4 h-4 text-[#1da1f2]"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 16 16"
-                                                    aria-hidden="true">
-                                                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
-                                                </svg>
-                                                <span>Twitter</span>
                                             </button>
                                         </div>
                                     </div>

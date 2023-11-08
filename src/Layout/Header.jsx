@@ -19,7 +19,6 @@ const Header = () => {
     const handlelogOutUser = async () => {
         try {
             await logOutUser();
-            console.log('afterlogout');
             toast.success('LogOut success!');
         } catch (err) {
             console.log(err);

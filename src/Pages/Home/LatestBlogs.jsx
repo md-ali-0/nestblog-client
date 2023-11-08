@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FiHeart } from 'react-icons/fi';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+import 'react-photo-view/dist/react-photo-view.css';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import useAxios from '../../Hooks/useAxios';
@@ -37,7 +39,6 @@ const LatestBlogs = () => {
     const handleWishList = async(post)=>{
         const email = user?.email
         const addWishListBlog = {...post, user:email}
-        console.log(addWishListBlog);
         try {
             const res = await axios.post('/add-to-wishlist', addWishListBlog);
             if (res.data?.acknowledged) {
@@ -60,11 +61,14 @@ const LatestBlogs = () => {
                     key={post._id}
                     className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden my-5">
                     <div className="relative">
-                        <img
-                            src={post.image}
-                            alt="News Image"
-                            className="w-full h-96 object-cover object-center"
-                        />
+                        <PhotoProvider>
+                            <PhotoView src={post.image}>
+                                <img
+                                    className="w-full h-96 object-cover object-center"
+                                    src={post.image}
+                                />
+                            </PhotoView>
+                        </PhotoProvider>
                         {user&&<FiHeart onClick={()=>{handleWishList(post)}} className='absolute top-5 right-5 text-white cursor-pointer' size={25}/>}
                         
                         <span className="absolute top-5 left-5 rounded-xl bg-primary text-white px-2 py-0.5">

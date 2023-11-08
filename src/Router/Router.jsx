@@ -67,7 +67,7 @@ const Router = createBrowserRouter([
             {
                 path: '/blog/:id',
                 loader: ({params})=>fetch(`http://localhost:8080/post/${params.id}`),
-                element: <PrivateRouter><BlogDetail/></PrivateRouter>
+                element: <BlogDetail/>
             },
             {
                 path: '/update-comment/:id',

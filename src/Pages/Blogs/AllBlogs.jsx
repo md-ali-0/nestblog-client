@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FiHeart } from 'react-icons/fi';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+import 'react-photo-view/dist/react-photo-view.css';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import useAxios from '../../Hooks/useAxios';
@@ -29,7 +31,6 @@ const AllBlogs = () => {
     const handleWishList = async (post) => {
         const email = user?.email;
         const addWishListBlog = { ...post, user: email };
-        console.log(addWishListBlog);
         try {
             const res = await axios.post('/add-to-wishlist', addWishListBlog);
             if (res.data?.acknowledged) {
@@ -77,8 +78,7 @@ const AllBlogs = () => {
                                         d="m1 9 4-4-4-4"
                                     />
                                 </svg>
-                                <span
-                                    className="ml-1 text-sm font-medium text-gray-200 hover:text-gray-604000 md:ml-2">
+                                <span className="ml-1 text-sm font-medium text-gray-200 hover:text-gray-604000 md:ml-2">
                                     Blogs
                                 </span>
                             </div>
@@ -145,11 +145,14 @@ const AllBlogs = () => {
                                     <div key={post._id} className="p-4">
                                         <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden dark:border-gray-600">
                                             <div className="relative">
-                                                <img
-                                                    className="lg:h-48 md:h-36 w-full object-cover object-center"
-                                                    src={post.image}
-                                                    alt="blog"
-                                                />
+                                                <PhotoProvider>
+                                                    <PhotoView src={post.image}>
+                                                        <img
+                                                            className=" rounded-xl left-0 top-0 w-full h-full z-0"
+                                                            src={post.image}
+                                                        />
+                                                    </PhotoView>
+                                                </PhotoProvider>
                                                 {user && (
                                                     <FiHeart
                                                         onClick={() => {

@@ -13,17 +13,19 @@ import {
     Table,
 } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../Context/AuthContext';
 
 const FeaturedBlogs = () => {
     const axios = useAxios();
-
+    const {user} = useContext(AuthContext)
     const {
         data: featuredPosts,
         isLoading,
     } = useQuery({
         queryKey: ['featuredPosts'],
-        queryFn: () => axios.get('/featured-post'),
+        queryFn: () => axios.get(`/featured-post?email=${user.email}`),
     });
     const theme = useTheme(getTheme());
 

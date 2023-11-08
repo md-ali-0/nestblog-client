@@ -1,8 +1,18 @@
-# React + Vite
+# Kotha - Personal Blog Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
+- Users Can Login/Registation
+- Users Can View Blogs
+- Users Can View Blogs by Category
+- Users Can Post Blogs
+- All Device Supported.
+- Admin Panel Added.
 
-Currently, two official plugins are available:
+## Functionality
+- This website is about Personal Blog.
+- In Server Side We Used Express JS.
+- And Fontend made with react Js.
+- User Auth System With Firebase
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Live Link
+- * Live LInk: [Tech Hub](https://techhub-3ef6d.web.app/)
