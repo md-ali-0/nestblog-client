@@ -33,19 +33,22 @@ const AddPosts = () => {
 
     const onSubmit = async (data) => {
         const { title, image, category, shortDescription, longDescription } = data;
-
+        const  loadingToast = toast.loading('Creating Blog Post ... !!');
         try {
             const imageResult = await uploadImage(image[0]);
             if (imageResult) {
                 const newPost = { title, image:imageResult, category, shortDescription, longDescription, createdBy:user.email, createdAt: new Date()}
                 const res = await axios.post('/add-post', newPost);
                 if (res.data?.acknowledged) {
+                    toast.dismiss(loadingToast);
                     toast.success('Blog Post Added');
                     reset();
                 }
             }
 
         } catch (error) {
+            toast.dismiss(loadingToast);
+            toast.error(error);
             console.log(error);
         }
     };
@@ -164,7 +167,7 @@ const AddPosts = () => {
                                     required: 'Category is required.',
                                 })}
                                 className="w-full block border placeholder-gray-500 px-5 py-3 my-1 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400">
-                                {categories.data?.result?.map(
+                                {categories.data?.map(
                                     (category, idx) => {
                                         return (
                                             <option

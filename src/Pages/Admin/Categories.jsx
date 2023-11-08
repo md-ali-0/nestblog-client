@@ -42,7 +42,7 @@ const Categories = () => {
     if (isLoading) {
         return <Loading />;
     }
-    const nodes = [...categories.data.result];
+    const nodes = [...categories.data];
     const data = { nodes };
 
     const onSubmit = async (data) => {

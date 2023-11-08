@@ -7,7 +7,7 @@ import { AuthContext } from '../../Context/AuthContext';
 import logo from '../../assets/logo.svg';
 // import Loading from '../components/loading';
 
-const Header = ({openSide, setOpenSide}) => {
+const Header = ({ openSide, setOpenSide }) => {
     const { user, isLoading, logOutUser, setIsLoading } =
         useContext(AuthContext);
     useEffect(() => {
@@ -34,7 +34,7 @@ const Header = ({openSide, setOpenSide}) => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center justify-start">
                             <button
-                                onClick={()=>setOpenSide(!openSide)}
+                                onClick={() => setOpenSide(!openSide)}
                                 type="button"
                                 className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
                                 <span className="sr-only">Open sidebar</span>
@@ -61,23 +61,22 @@ const Header = ({openSide, setOpenSide}) => {
                         </div>
                         <div className="flex md:order-2">
                             <DarkThemeToggle className="mr-2 focus:ring-0" />
-                            <Link to='/' className='flex items-center justify-center rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 mr-2 focus:ring-0'>
-                            <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="20"
-                                                    height="20"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round">
-                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                    <circle
-                                                        cx="12"
-                                                        cy="12"
-                                                        r="3"></circle>
-                                                </svg>
+                            <Link
+                                to="/"
+                                className="flex items-center justify-center rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700 mr-2 focus:ring-0">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
                             </Link>
                             {user && (
                                 <Dropdown
@@ -101,7 +100,7 @@ const Header = ({openSide, setOpenSide}) => {
                                     </Dropdown.Header>
                                     <Link
                                         className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
-                                        to="/admin/dashboard">
+                                        to="/admin">
                                         Dashboard
                                     </Link>
                                     <Link
@@ -124,8 +123,8 @@ const Header = ({openSide, setOpenSide}) => {
         </Flowbite>
     );
 };
-Header.propTypes ={
+Header.propTypes = {
     setOpenSide: PropTypes.func,
     openSide: PropTypes.bool,
-}
+};
 export default Header;

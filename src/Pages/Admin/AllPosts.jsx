@@ -1,17 +1,34 @@
 import { useQuery } from '@tanstack/react-query';
+import { Pagination } from 'flowbite-react';
+import { useEffect, useState } from 'react';
 import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
 const AllPosts = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPost, setTotalPost] = useState(0);
+    const [postPerPage, setPostPerPage] = useState(10);
+    const totalPage = Math.ceil(totalPost / postPerPage);
+
+    const onPageChange = (page) => setCurrentPage(page);
     const axios = useAxios();
+
     const { data: allPosts, isLoading } = useQuery({
-        queryKey: ['posts'],
-        queryFn: () => axios.get('/all-post'),
+        queryKey: ['posts', currentPage, currentPage],
+        queryFn: () => axios.get(`/all-post?page=${currentPage-1}&size=${postPerPage}`),
     });
+    const handleItemPerPage = (e)=>{
+        setPostPerPage(e.target.value)
+        setCurrentPage(1)
+    }
+    useEffect(() => {
+        axios
+            .get('/dashboard-count')
+            .then((res) => setTotalPost(res.data.postCount));
+    }, [axios]);
     if (isLoading) {
         return <Loading />;
     }
-    console.log(allPosts.data);
     return (
         <div className="p-4 sm:ml-64">
             <div className="p-5 gap-2 mt-16">
@@ -54,10 +71,18 @@ const AllPosts = () => {
                                             alt=""
                                         />
                                     </th>
-                                    <td className="px-6 py-4"><h3 className='py-2'>{post.title}</h3></td>
-                                    <td className="px-6 py-4">{post.category}</td>
-                                    <td className="px-6 py-4">{post.shortDescription}</td>
-                                    <td className="px-6 py-4">{post.createdAt}</td>
+                                    <td className="px-6 py-4">
+                                        <h3 className="py-2">{post.title}</h3>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {post.category}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {post.shortDescription}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {post.createdAt}
+                                    </td>
                                     <td className="px-6 py-4">
                                         <a
                                             href="#"
@@ -69,6 +94,27 @@ const AllPosts = () => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="flex justify-center flex-wrap py-3 gap-2">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPage}
+                        onPageChange={onPageChange}
+                        showIcons
+                    />
+                    <div>
+                        <select
+                            className="p-2 mt-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            name=""
+                            id=""
+                            onChange={handleItemPerPage}
+                            defaultValue={postPerPage}>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

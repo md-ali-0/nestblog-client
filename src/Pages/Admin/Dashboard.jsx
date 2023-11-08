@@ -1,20 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import useAxios from "../../Hooks/useAxios";
+import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
 const Dashboard = () => {
-    const axios = useAxios()
-    const {
-        data: total,
-        isLoading
-    } = useQuery({
-        queryKey: ['categories'],
-        queryFn: () => axios.get('/categories'),
+    const axios = useAxios();
+    const { data: total, isLoading } = useQuery({
+        queryKey: ['dashboardCount'],
+        queryFn: () => axios.get('/dashboard-count'),
     });
     if (isLoading) {
-        return <Loading/>
+        return <Loading />;
     }
     return (
         <div className="p-4 sm:ml-64">
@@ -45,7 +41,7 @@ const Dashboard = () => {
                                 Total Posts
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                0
+                                {total?.data?.postCount}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
@@ -74,7 +70,7 @@ const Dashboard = () => {
                                 Total Comments
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                0
+                                {total?.data?.commentCount}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
@@ -99,7 +95,7 @@ const Dashboard = () => {
                                 Total Users
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                1
+                                {total?.data?.userCount}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
@@ -121,11 +117,10 @@ const Dashboard = () => {
                         </div>
                         <div className="p-4 text-right">
                             <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">
-                                
-                                {'Categories' || <Skeleton />}
+                                Categories
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                {total.data.totalCategories || <Skeleton />}
+                                {total?.data?.categoryCount}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
