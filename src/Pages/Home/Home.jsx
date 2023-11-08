@@ -2,6 +2,7 @@ import Banner from './Banner';
 import CategoriesList from './CategoriesList';
 import Featured from './Featured';
 import LatestBlogs from './LatestBlogs';
+import NewsLatter from './NewsLatter';
 
 const Home = () => {
     return (
@@ -13,10 +14,12 @@ const Home = () => {
                         <LatestBlogs />
                     </div>
                     <div className="col-span-2">
-                        <Featured/>
-                        <CategoriesList/>
-                        
+                        <Featured />
+                        <CategoriesList />
                     </div>
+                </div>
+                <div>
+                    <NewsLatter />
                 </div>
             </div>
         </main>
