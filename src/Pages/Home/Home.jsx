@@ -3,6 +3,7 @@ import CategoriesList from './CategoriesList';
 import Featured from './Featured';
 import LatestBlogs from './LatestBlogs';
 import NewsLatter from './NewsLatter';
+import StayConnected from './StayConnected';
 
 const Home = () => {
     return (
@@ -16,6 +17,7 @@ const Home = () => {
                     <div className="col-span-2">
                         <Featured />
                         <CategoriesList />
+                        <StayConnected/>
                     </div>
                 </div>
                 <div>
