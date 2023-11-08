@@ -1,6 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Pagination } from 'flowbite-react';
 import { useEffect, useState } from 'react';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
@@ -13,14 +16,50 @@ const AllPosts = () => {
     const onPageChange = (page) => setCurrentPage(page);
     const axios = useAxios();
 
-    const { data: allPosts, isLoading } = useQuery({
-        queryKey: ['posts', currentPage, currentPage],
-        queryFn: () => axios.get(`/all-post?page=${currentPage-1}&size=${postPerPage}`),
+    const { data: allPosts, isLoading, refetch } = useQuery({
+        queryKey: ['posts', currentPage, postPerPage],
+        queryFn: () =>
+            axios.get(`/all-post?page=${currentPage - 1}&size=${postPerPage}`),
     });
-    const handleItemPerPage = (e)=>{
-        setPostPerPage(e.target.value)
-        setCurrentPage(1)
-    }
+    const handleItemPerPage = (e) => {
+        setPostPerPage(e.target.value);
+        setCurrentPage(1);
+    };
+    const handleDeletePost = async(id) => {
+        try {
+            const isConfirm = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            });
+            if (isConfirm.isConfirmed) {
+                const result = await axios.delete(`/delete-post/${id}`);
+                console.log(result);
+                if (result?.data?.acknowledged) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your Post has been deleted.',
+                        'success',
+                    );
+                    refetch();
+                }
+            } else if (isConfirm.dismiss === Swal.DismissReason.cancel) {
+                {
+                    Swal.fire(
+                        'Cancelled',
+                        'Your imaginary file is safe :)',
+                        'error',
+                    );
+                }
+            }
+        } catch (error) {
+            Swal.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
+        }
+    };
     useEffect(() => {
         axios
             .get('/dashboard-count')
@@ -84,11 +123,26 @@ const AllPosts = () => {
                                         {post.createdAt}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <a
-                                            href="#"
-                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                            Edit
-                                        </a>
+                                        <div className="flex gap-2">
+                                            <Link
+                                                to={`/admin/edit-post/${post._id}`}
+                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                                <FiEdit
+                                                    size={15}
+                                                    className="inline"
+                                                />
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    handleDeletePost(post._id)
+                                                }
+                                                className="font-medium text-red-600 dark:red-blue-500 hover:underline">
+                                                <FiTrash2
+                                                    size={15}
+                                                    className="inline"
+                                                />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

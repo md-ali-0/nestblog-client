@@ -7,6 +7,7 @@ import AllPosts from "../Pages/Admin/AllPosts";
 import Categories from "../Pages/Admin/Categories";
 import CategoryEdit from "../Pages/Admin/CategoryEdit";
 import Dashboard from "../Pages/Admin/Dashboard";
+import EditPosts from "../Pages/Admin/PostEdit";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import Contact from "../Pages/Contact/Contact";
@@ -65,6 +66,11 @@ const Router = createBrowserRouter([
             {
                 path: 'all-post',
                 element: <AllPosts/>
+            },
+            {
+                path: 'edit-post/:id',
+                loader: ({params})=>fetch(`http://localhost:8080/post/${params.id}`),
+                element: <EditPosts/>
             },
         ]
     }

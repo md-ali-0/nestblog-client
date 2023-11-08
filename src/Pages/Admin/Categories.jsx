@@ -74,7 +74,7 @@ const Categories = () => {
                 if (result?.data?.acknowledged) {
                     Swal.fire(
                         'Deleted!',
-                        'Your file has been deleted.',
+                        'Your Category has been deleted.',
                         'success',
                     );
                     refetch();

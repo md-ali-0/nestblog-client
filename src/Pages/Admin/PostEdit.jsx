@@ -1,17 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
-import { AuthContext } from '../../Context/AuthContext';
+import { useLoaderData } from 'react-router-dom';
 import useAxios from '../../Hooks/useAxios';
-import useImageUpload from '../../Hooks/useImageUpload';
 import Loading from '../../components/Loading';
 
-const AddPosts = () => {
-    const {user} = useContext(AuthContext)
+const EditPosts = () => {
+    const post = useLoaderData();
     const axios = useAxios();
-    const { uploadImage } = useImageUpload();
     const {
         register,
         handleSubmit,
@@ -33,17 +30,14 @@ const AddPosts = () => {
 
     const onSubmit = async (data) => {
         const { title, image, category, shortDescription, longDescription } = data;
-        const  loadingToast = toast.loading('Creating Blog Post ... !!');
+        const  loadingToast = toast.loading('Updating Blog Post ... !!');
         try {
-            const imageResult = await uploadImage(image[0]);
-            if (imageResult) {
-                const newPost = { title, image:imageResult, category, shortDescription, longDescription, createdBy:user.email, author:user.displayName, createdAt: new Date()}
-                const res = await axios.post('/add-post', newPost);
-                if (res.data?.acknowledged) {
-                    toast.dismiss(loadingToast);
-                    toast.success('Blog Post Added');
-                    reset();
-                }
+            const updatePost = { title, image, category, shortDescription, longDescription, updatedAt: new Date()}
+            const res = await axios.put(`/edit-post/${post._id}`, updatePost);
+            if (res.data?.acknowledged) {
+                toast.dismiss(loadingToast);
+                toast.success('Blog Post Updated');
+                reset();
             }
 
         } catch (error) {
@@ -71,6 +65,7 @@ const AddPosts = () => {
                                     {...register('title', {
                                         required: 'Title is required.',
                                     })}
+                                    defaultValue={post.title}
                                     placeholder="Enter Post Title"
                                     className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                 />
@@ -98,6 +93,7 @@ const AddPosts = () => {
                                             message: 'Short Desciption Must be Under 250 characters'
                                         }
                                     })}
+                                    defaultValue={post.shortDescription}
                                     className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                     rows="3"
                                     placeholder="Enter Short Description"></textarea>
@@ -120,30 +116,11 @@ const AddPosts = () => {
                                     Image:
                                 </label>
                                 <input
-                                    type="file"
+                                    type="text"
                                     accept="image/png, image/jpeg"
                                     {...register('image', {
-                                        required: 'Blog Image is required.',
-                                        validate: (value) => {
-                                            const acceptFormat = [
-                                                'png',
-                                                'jpg',
-                                                'jpeg',
-                                            ];
-                                            const fileExtension = value[0]?.name
-                                                .split('.')
-                                                .pop()
-                                                .toLowerCase();
-                                            if (
-                                                !acceptFormat.includes(
-                                                    fileExtension,
-                                                )
-                                            ) {
-                                                return 'Invalid file. Select .png, .jpg, .jpeg only.';
-                                            }
-                                            return true;
-                                        },
                                     })}
+                                    defaultValue={post.image}
                                     className="w-full block border placeholder-gray-500 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                 />
                                 {errors.image && (
@@ -166,6 +143,7 @@ const AddPosts = () => {
                                 {...register('category', {
                                     required: 'Category is required.',
                                 })}
+                                defaultValue={post.category}
                                 className="w-full block border placeholder-gray-500 px-5 py-3 my-1 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400">
                                 {categories.data?.map(
                                     (category, idx) => {
@@ -200,6 +178,7 @@ const AddPosts = () => {
                             })}
                             className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             rows="3"
+                            defaultValue={post.longDescription}
                             placeholder="Enter Long Description"></textarea>
                         {errors.longDescription && (
                             <span className="text-center text-red-500 flex items-center gap-1">
@@ -215,21 +194,7 @@ const AddPosts = () => {
                         <button
                             type="submit"
                             className="w-full inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-6 py-3 leading-6 border-blue-700 bg-blue-700 text-white hover:text-white hover:bg-blue-600 hover:border-blue-600 focus:ring focus:ring-blue-400 focus:ring-opacity-50 active:bg-blue-700 active:border-blue-700 dark:focus:ring-blue-400 dark:focus:ring-opacity-90">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="feather feather-plus">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            <span>Add Post</span>
+                            <span>Update Post</span>
                         </button>
                     </div>
                 </form>
@@ -238,4 +203,4 @@ const AddPosts = () => {
     );
 };
 
-export default AddPosts;
+export default EditPosts;
