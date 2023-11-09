@@ -15,4 +15,4 @@
 - User Auth System With Firebase
 
 ## Live Link
-- * Live LInk: [Tech Hub](https://techhub-3ef6d.web.app/)
+- * Live LInk: [Kotha - Personal Blog](https://kotha-blog.netlify.app/)
