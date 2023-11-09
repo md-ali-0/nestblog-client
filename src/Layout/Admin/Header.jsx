@@ -4,10 +4,11 @@ import { useContext, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
+import useAxios from '../../Hooks/useAxios';
 import logo from '../../assets/logo.svg';
-// import Loading from '../components/loading';
 
 const Header = ({ openSide, setOpenSide }) => {
+    const axios = useAxios();
     const { user, logOutUser, setIsLoading } =
         useContext(AuthContext);
     useEffect(() => {
@@ -16,8 +17,10 @@ const Header = ({ openSide, setOpenSide }) => {
     const handlelogOutUser = async () => {
         try {
             await logOutUser();
-            console.log('afterlogout');
-            toast.success('LogOut success!');
+            const logout = await axios.post('/logout');
+            if (logout.status === 200) {
+                toast.success('LogOut success!');
+            }
         } catch (err) {
             console.log(err);
             setIsLoading(false);

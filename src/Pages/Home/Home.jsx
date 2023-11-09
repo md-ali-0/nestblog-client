@@ -6,6 +6,7 @@ import NewsLatter from './NewsLatter';
 import StayConnected from './StayConnected';
 
 const Home = () => {
+
     return (
         <main>
             <Banner />

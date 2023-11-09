@@ -10,24 +10,36 @@ import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
 const AllBlogs = () => {
-    const { user } = useContext(AuthContext);
+    const { user, isLoading: loading } = useContext(AuthContext);
+
+    const email = user.email;
     const axios = useAxios();
+
     const [filterCategory, setFilterCategory] = useState('');
     const [serachValue, setSerachValue] = useState('');
     const [categories, setCategories] = useState([]);
+
     useEffect(() => {
         axios.get('/categories').then((res) => setCategories(res.data));
     }, [axios]);
-    const { data: allPosts, isLoading } = useQuery({
+
+    const { data, refetch, isLoading } = useQuery({
         queryKey: ['allPosts', filterCategory],
-        queryFn: () =>
-            axios.get(
-                `/all-blogs?email=${user.email}&category=${filterCategory}`,
-            ),
+        queryFn: async () => {
+            const data = await axios.get(
+                `/all-blogs?email=${email}&category=${filterCategory}`,
+            );
+            return data.data;
+        },
+        retry: 'true',
     });
+    if (loading) {
+        return <Loading />;
+    }
     if (isLoading) {
         return <Loading />;
     }
+
     const handleWishList = async (post) => {
         const email = user?.email;
         const addWishListBlog = { ...post, user: email };
@@ -40,6 +52,7 @@ const AllBlogs = () => {
             console.log(error);
         }
     };
+    console.log(data);
     return (
         <div className="max-w-screen-lg mx-auto py-5 px-3">
             <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900  px-6 py-10 shadow-2xl rounded-xl sm:rounded-3xl sm:px-24 xl:py-20">
@@ -128,81 +141,104 @@ const AllBlogs = () => {
                                 </select>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-rows-2 lg:grid-cols-3 -m-4">
-                            {allPosts.data
-                                .filter((post) => {
-                                    if (serachValue === '') {
-                                        return post;
-                                    } else if (
-                                        post.title
-                                            .toLowerCase()
-                                            .includes(serachValue.toLowerCase())
-                                    ) {
-                                        return post;
-                                    }
-                                })
-                                .map((post) => (
-                                    <div key={post._id} className="p-4">
-                                        <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden dark:border-gray-600">
-                                            <div className="relative">
-                                                <PhotoProvider>
-                                                    <PhotoView src={post.image}>
-                                                        <img
-                                                            className=" rounded-xl left-0 top-0 w-full h-full z-0"
-                                                            src={post.image}
-                                                        />
-                                                    </PhotoView>
-                                                </PhotoProvider>
-                                                {user && (
-                                                    <FiHeart
-                                                        onClick={() => {
-                                                            handleWishList(
-                                                                post,
-                                                            );
-                                                        }}
-                                                        className="absolute top-5 right-5 text-white cursor-pointer"
-                                                        size={25}
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className="p-6">
-                                                <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 dark:text-gray-400 mb-1">
-                                                    {post.category}
-                                                </h2>
-                                                <h1 className="title-font text-lg font-medium text-gray-900 dark:text-gray-200 mb-3">
-                                                    {post.title}
-                                                </h1>
-                                                <p className="leading-relaxed mb-3">
-                                                    {post.shortDescription}
-                                                </p>
-                                                <div className="flex items-center flex-wrap ">
-                                                    <Link
-                                                        to={`/blog/${post._id}`}
-                                                        className="text-indigo-500 dark:text-blue-500 inline-flex items-center md:mb-2 lg:mb-0">
-                                                        Read More
-                                                        <svg
-                                                            className="w-4 h-4 ml-2"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                            strokeWidth={2}
-                                                            fill="none"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round">
-                                                            <path d="M5 12h14" />
-                                                            <path d="M12 5l7 7-7 7" />
-                                                        </svg>
-                                                    </Link>
-                                                    <span className="text-gray-400 dark:text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200 dark:border-gray-600">
-                                                        {new Date(
-                                                            post.createdAt,
-                                                        ).toLocaleString()}
-                                                    </span>
+                        {data && Array.isArray(data) && (
+                            <div>
+                                <div className="grid grid-cols-1 md:grid-rows-2 lg:grid-cols-3 -m-4">
+                                    {data &&
+                                        data
+                                            ?.filter((post) => {
+                                                if (serachValue === '') {
+                                                    return post;
+                                                } else if (
+                                                    post.title
+                                                        .toLowerCase()
+                                                        .includes(
+                                                            serachValue.toLowerCase(),
+                                                        )
+                                                ) {
+                                                    return post;
+                                                }
+                                            })
+                                            .map((post) => (
+                                                <div
+                                                    key={post._id}
+                                                    className="p-4">
+                                                    <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden dark:border-gray-600">
+                                                        <div className="relative">
+                                                            <PhotoProvider>
+                                                                <PhotoView
+                                                                    src={
+                                                                        post.image
+                                                                    }>
+                                                                    <img
+                                                                        className=" rounded-xl left-0 top-0 w-full h-full z-0"
+                                                                        src={
+                                                                            post.image
+                                                                        }
+                                                                    />
+                                                                </PhotoView>
+                                                            </PhotoProvider>
+                                                            {user && (
+                                                                <FiHeart
+                                                                    onClick={() => {
+                                                                        handleWishList(
+                                                                            post,
+                                                                        );
+                                                                    }}
+                                                                    className="absolute top-5 right-5 text-white cursor-pointer"
+                                                                    size={25}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                        <div className="p-6">
+                                                            <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 dark:text-gray-400 mb-1">
+                                                                {post.category}
+                                                            </h2>
+                                                            <h1 className="title-font text-lg font-medium text-gray-900 dark:text-gray-200 mb-3">
+                                                                {post.title}
+                                                            </h1>
+                                                            <p className="leading-relaxed mb-3">
+                                                                {
+                                                                    post.shortDescription
+                                                                }
+                                                            </p>
+                                                            <div className="flex items-center flex-wrap ">
+                                                                <Link
+                                                                    to={`/blog/${post._id}`}
+                                                                    className="text-indigo-500 dark:text-blue-500 inline-flex items-center md:mb-2 lg:mb-0">
+                                                                    Read More
+                                                                    <svg
+                                                                        className="w-4 h-4 ml-2"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth={
+                                                                            2
+                                                                        }
+                                                                        fill="none"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round">
+                                                                        <path d="M5 12h14" />
+                                                                        <path d="M12 5l7 7-7 7" />
+                                                                    </svg>
+                                                                </Link>
+                                                                <span className="text-gray-400 dark:text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200 dark:border-gray-600">
+                                                                    {new Date(
+                                                                        post.createdAt,
+                                                                    ).toLocaleString()}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            ))}
+                                </div>
+                                {data.length === 0 && (
+                                    <div className="flex justify-center">
+                                        <h3>No Wishlist Post Available</h3>
                                     </div>
-                                ))}
-                        </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </section>
             </div>

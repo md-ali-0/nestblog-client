@@ -49,7 +49,7 @@ const Router = createBrowserRouter([
             },
             {
                 path: '/category/:name',
-                loader: ({params})=>fetch(`https://kotha-server.vercel.app/blog-by-category/${params.name}`),
+                loader: ({params})=>fetch(`http://localhost:8080/blog-by-category/${params.name}`),
                 element: <BlogByCategory/>
             },
             {
@@ -66,12 +66,12 @@ const Router = createBrowserRouter([
             },
             {
                 path: '/blog/:id',
-                loader: ({params})=>fetch(`https://kotha-server.vercel.app/post/${params.id}`),
+                loader: ({params})=>fetch(`http://localhost:8080/post/${params.id}`),
                 element: <BlogDetail/>
             },
             {
                 path: '/update-comment/:id',
-                loader: ({params})=>fetch(`https://kotha-server.vercel.app/comment/${params.id}`),
+                loader: ({params})=>fetch(`http://localhost:8080/comment/${params.id}`),
                 element: <PrivateRouter><UpdateComment/></PrivateRouter>
             }
         ]
@@ -90,7 +90,7 @@ const Router = createBrowserRouter([
             },
             {
                 path: 'edit-category/:id',
-                loader: ({params})=>fetch(`https://kotha-server.vercel.app/category/${params.id}`),
+                loader: ({params})=>fetch(`http://localhost:8080/category/${params.id}`),
                 element: <PrivateRouter><CategoryEdit/></PrivateRouter>
             },
             {
@@ -103,7 +103,7 @@ const Router = createBrowserRouter([
             },
             {
                 path: 'edit-post/:id',
-                loader: ({params})=>fetch(`https://kotha-server.vercel.app/post/${params.id}`),
+                loader: ({params})=>fetch(`http://localhost:8080/post/${params.id}`),
                 element: <PrivateRouter><EditPosts/></PrivateRouter>
             },
         ]

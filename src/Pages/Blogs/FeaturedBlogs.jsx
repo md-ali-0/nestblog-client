@@ -1,39 +1,18 @@
-import { useQuery } from '@tanstack/react-query';
-import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
-import { getTheme } from '@table-library/react-table-library/baseline';
-import {
-    Body,
-    Cell,
-    Header,
-    HeaderCell,
-    HeaderRow,
-    Row,
-    Table,
-} from '@table-library/react-table-library/table';
-import { useTheme } from '@table-library/react-table-library/theme';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
+import FeaturedTable from './FeaturedTable';
 
 const FeaturedBlogs = () => {
-    const axios = useAxios();
-    const {user} = useContext(AuthContext)
-    const {
-        data: featuredPosts,
-        isLoading,
-    } = useQuery({
-        queryKey: ['featuredPosts'],
-        queryFn: () => axios.get(`/featured-post?email=${user.email}`),
-    });
-    const theme = useTheme(getTheme());
+    
+    const {user , isLoading} = useContext(AuthContext)
 
     if (isLoading) {
         return <Loading />;
     }
-    const nodes = [...featuredPosts.data];
-    const data = { nodes };
+
 
     return (
         <div className="max-w-screen-lg mx-auto py-5 px-3">
@@ -91,35 +70,7 @@ const FeaturedBlogs = () => {
                                 Featured Blogs
                             </h3>
                         </div>
-                        <Table data={data} theme={theme}>
-                        {(tableList) => (
-                            <>
-                                <Header>
-                                    <HeaderRow>
-                                        <HeaderCell>Serial</HeaderCell>
-                                        <HeaderCell>Image</HeaderCell>
-                                        <HeaderCell>Title</HeaderCell>
-                                        <HeaderCell>Author</HeaderCell>
-                                        <HeaderCell>Author Image</HeaderCell>
-                                    </HeaderRow>
-                                </Header>
-
-                                <Body>
-                                    {tableList.map((item, idx) => (
-                                        <Row key={item._id} item={item}>
-                                            <Cell>{idx+1}</Cell>
-                                            <Cell><img className='w-16 rounded-xl' src={item.image}></img></Cell>
-                                            <Cell>{item.title}</Cell>
-                                            <Cell>
-                                                {item.author}
-                                            </Cell>
-                                            <Cell><img className='w-16 rounded-full' src={item.authorImage} alt={item.author} /></Cell>
-                                        </Row>
-                                    ))}
-                                </Body>
-                            </>
-                        )}
-                    </Table>
+                        <FeaturedTable user={user}></FeaturedTable>
                     </div>
                 </section>
             </div>

@@ -9,9 +9,11 @@ import { useContext, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
+import useAxios from '../Hooks/useAxios';
 import logo from '../assets/logo.svg';
 
 const Header = () => {
+    const axios = useAxios();
     const { user, logOutUser, setIsLoading } = useContext(AuthContext);
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -19,10 +21,13 @@ const Header = () => {
     const handlelogOutUser = async () => {
         try {
             await logOutUser();
-            toast.success('LogOut success!');
+            const logout = await axios.post('/logout');
+            if (logout.status === 200) {
+                toast.success('LogOut success!');
+            }
         } catch (err) {
             console.log(err);
-            setIsLoading(false)
+            setIsLoading(false);
             toast.error('LogOut Error!');
         }
     };
@@ -61,9 +66,17 @@ const Header = () => {
                                         {user?.email}
                                     </span>
                                 </Dropdown.Header>
-                                <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin">Admin</Link>
+                                <Link
+                                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
+                                    to="/admin">
+                                    Admin
+                                </Link>
                                 <Dropdown.Divider />
-                                <Link className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white' to="/admin/add-post">Add Blog</Link>
+                                <Link
+                                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
+                                    to="/admin/add-post">
+                                    Add Blog
+                                </Link>
                                 <Dropdown.Divider />
                                 <Dropdown.Item onClick={handlelogOutUser}>
                                     Sign out
@@ -89,55 +102,55 @@ const Header = () => {
                         <NavLink
                             to="/"
                             className={({ isActive }) =>
-                            isActive
-                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                        }>
+                                isActive
+                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                            }>
                             Home
                         </NavLink>
                         <NavLink
                             to="/all-blogs"
                             className={({ isActive }) =>
-                            isActive
-                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                        }>
+                                isActive
+                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                            }>
                             All blogs
                         </NavLink>
                         <NavLink
                             to="/featured-blogs"
                             className={({ isActive }) =>
-                            isActive
-                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                        }>
+                                isActive
+                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                            }>
                             Featured Blogs
                         </NavLink>
                         <NavLink
                             to="/about"
                             className={({ isActive }) =>
-                            isActive
-                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                        }>
+                                isActive
+                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                            }>
                             About
                         </NavLink>
                         <NavLink
                             to="/contact"
                             className={({ isActive }) =>
-                            isActive
-                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                        }>
+                                isActive
+                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                            }>
                             Contact
                         </NavLink>
                         <NavLink
                             to="/wishlist"
                             className={({ isActive }) =>
-                            isActive
-                                ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                        }>
+                                isActive
+                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
+                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
+                            }>
                             Wishlist
                         </NavLink>
                     </Navbar.Collapse>
