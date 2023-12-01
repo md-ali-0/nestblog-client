@@ -25,7 +25,7 @@ const BlogDetail = () => {
         createdAt,
     } = blog;
     const {
-        data: comments,
+        data: comments=[],
         isLoading,
         refetch,
     } = useQuery({

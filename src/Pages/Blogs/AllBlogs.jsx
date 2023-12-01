@@ -23,7 +23,7 @@ const AllBlogs = () => {
         axios.get('/categories').then((res) => setCategories(res.data));
     }, [axios]);
 
-    const { data, refetch, isLoading } = useQuery({
+    const { data=[], refetch, isLoading } = useQuery({
         queryKey: ['allPosts', filterCategory],
         queryFn: async () => {
             const data = await axios.get(
