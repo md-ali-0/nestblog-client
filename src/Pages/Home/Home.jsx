@@ -15,7 +15,7 @@ const Home = () => {
                     <div className="col-span-4 p-4 ">
                         <LatestBlogs />
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-4 md:col-span-2 px-3">
                         <Featured />
                         <CategoriesList />
                         <StayConnected/>

@@ -75,10 +75,16 @@ const Login = () => {
                     createdAt: user.metadata?.creationTime,
                     lastSignInTime: user.metadata?.lastSignInTime,
                 };
+
+                const userJWT = { email: user.email };
+                axios
+                    .post('/jwt', userJWT)
+                    .then((res) => console.log(res.data))
+                    .catch(err=>console.log(err))
                 await axios.put('/edit-user', newUser);
                 toast.dismiss(loadingToast);
                 toast.success('Successfully logined!');
-                navigate('/');
+                navigate(location?.state ? location.state : '/');
             }
         } catch (error) {
             toast.dismiss(loadingToast);
