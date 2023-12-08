@@ -11,7 +11,8 @@ All-Device Friendly: Enjoy an optimized experience across all devices, whether i
 Responsive Design: A sleek and responsive design ensures an enjoyable browsing experience on any screen size.
 - 🛠️ Admin Control Panel
 
-# Manage with Ease: Admin panel included for seamless management of user data and blog content.
+# Manage with Ease:
+- Admin panel included for seamless management of user data and blog content.
 
 # Tech Stack
 - Server Side: Developed using Express.js for a robust and efficient server structure.
