@@ -54,6 +54,7 @@ const LatestBlogs = () => {
     return (
         <div>
             <h3 className="text-4xl font-bold pb-3">Latest Blogs</h3>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
             {allPosts.data.map((post) => (
                 <motion.div
                     initial={{ x: '10%' }}
@@ -64,7 +65,7 @@ const LatestBlogs = () => {
                         <PhotoProvider>
                             <PhotoView src={post.image}>
                                 <img
-                                    className="w-full h-96 object-cover object-center"
+                                    className="w-full h-56 object-cover object-center"
                                     src={post.image}
                                 />
                             </PhotoView>
@@ -95,6 +96,7 @@ const LatestBlogs = () => {
                     </div>
                 </motion.div>
             ))}
+            </div>
             <div className="flex justify-center flex-wrap py-3 gap-2">
                 <Pagination
                     currentPage={currentPage}
