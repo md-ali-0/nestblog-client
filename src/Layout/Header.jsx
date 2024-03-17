@@ -1,10 +1,4 @@
-import {
-    Avatar,
-    DarkThemeToggle,
-    Dropdown,
-    Flowbite,
-    Navbar,
-} from 'flowbite-react';
+import { Avatar, DarkThemeToggle, Dropdown, Flowbite, Navbar } from 'flowbite-react';
 import { useContext, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
@@ -15,10 +9,12 @@ import logo from '../assets/logo.svg';
 const Header = () => {
     const axios = useAxios();
     const { user, logOutUser, setIsLoading } = useContext(AuthContext);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    const handlelogOutUser = async () => {
+
+    const handleLogOutUser = async () => {
         try {
             await logOutUser();
             const logout = await axios.post('/logout');
@@ -31,11 +27,12 @@ const Header = () => {
             toast.error('LogOut Error!');
         }
     };
+
     return (
         <Flowbite>
             <header>
                 <Navbar
-                    className="bg-white/60 dark:bg-[#161819] shadow-sm dark:shadow-xl backdrop-blur relative"
+                    className="backdrop-blur relative"
                     container="true">
                     <Link className="flex items-center" to="/">
                         <img
@@ -78,7 +75,7 @@ const Header = () => {
                                     Add Blog
                                 </Link>
                                 <Dropdown.Divider />
-                                <Dropdown.Item onClick={handlelogOutUser}>
+                                <Dropdown.Item onClick={handleLogOutUser}>
                                     Sign out
                                 </Dropdown.Item>
                             </Dropdown>

@@ -8,7 +8,7 @@ import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
-import useAxios from '../../Hooks/useAxios';
+import useAxios from '../../Hooks/useAxios.jsx';
 import Loading from '../../components/Loading';
 
 const LatestBlogs = () => {
