@@ -40,7 +40,7 @@ admin@gmail.com
 Password:
 
 ```bash
-123456@kH
+4qeaKeRGwi8@iYB
 ```
 
 - User Details :
@@ -48,13 +48,13 @@ Password:
 Email:
 
 ```bash
-user@gmail.com
+ali@gmail.com
 ```
 
 Password:
 
 ```bash
-123456@kH
+123456
 ```
 
 ## Live Link
