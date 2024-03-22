@@ -60,12 +60,12 @@ const Router = createBrowserRouter([
             },
             {
                 path: '/blog/:id',
-                loader: ({params})=>fetch(`http://localhost:8080/post/details/${params.id}`),
+                loader: ({params})=>fetch(`https://nestblog-server.onrender.com/post/details/${params.id}`),
                 element: <BlogDetail/>
             },
             {
                 path: '/update-comment/:id',
-                loader: ({params})=>fetch(`http://localhost:8080/comment/details/${params.id}`),
+                loader: ({params})=>fetch(`https://nestblog-server.onrender.com/comment/details/${params.id}`),
                 element: <PrivateRouter><UpdateComment/></PrivateRouter>
             }
         ]
@@ -84,7 +84,7 @@ const Router = createBrowserRouter([
             },
             {
                 path: 'edit-category/:id',
-                loader: ({params})=>fetch(`http://localhost:8080/category/details/${params.id}`),
+                loader: ({params})=>fetch(`https://nestblog-server.onrender.com/category/details/${params.id}`),
                 element: <PrivateRouter><CategoryEdit/></PrivateRouter>
             },
             {
@@ -97,7 +97,7 @@ const Router = createBrowserRouter([
             },
             {
                 path: 'edit-post/:id',
-                loader: ({params})=>fetch(`http://localhost:8080/post/details/${params.id}`),
+                loader: ({params})=>fetch(`https://nestblog-server.onrender.com/post/details/${params.id}`),
                 element: <PrivateRouter><EditPosts/></PrivateRouter>
             },
         ]
