@@ -23,7 +23,7 @@ const LatestBlogs = () => {
     const { data: allPosts, isLoading } = useQuery({
         queryKey: ['latestposts', currentPage, postPerPage],
         queryFn: () =>
-            axios.get(`/all-post?page=${currentPage - 1}&size=${postPerPage}`),
+            axios.get(`/post/all?page=${currentPage - 1}&size=${postPerPage}`),
     });
 
     const handleItemPerPage = (e) => {
@@ -33,17 +33,15 @@ const LatestBlogs = () => {
 
     useEffect(() => {
         axios
-            .get('/dashboard-count')
-            .then((res) => setTotalPost(res.data.postCount));
+            .get('/post/total')
+            .then((res) => setTotalPost(res.data));
     }, [axios]);
     const handleWishList = async(post)=>{
         const email = user?.email
-        const addWishListBlog = {...post, user:email}
+        const addWishListBlog = {...post, wishlistBy:email}
         try {
-            const res = await axios.post('/add-to-wishlist', addWishListBlog);
-            if (res.data?.acknowledged) {
-                toast.success('Wishlist Added!');
-            }
+            const res = await axios.post('/wishlist/add', addWishListBlog);
+            toast.success('Wishlist Added!');
         } catch (error) {
             console.log(error);
         }
@@ -89,7 +87,7 @@ const LatestBlogs = () => {
                             {post.shortDescription}
                         </p>
                         <Link
-                            to={`/blog/${post._id}`}
+                            to={`/blog/${post.id}`}
                             className="text-primary hover:underline block mt-3">
                             Read more
                         </Link>

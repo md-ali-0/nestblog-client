@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const WishListCard = ({ post , handleWishListDelete}) => {
     
-    const { _id, title, image, category, shortDescription, createdAt} = post
+    const { id, title, image, category, shortDescription, createdAt} = post
 
     return (
         <div>
@@ -17,7 +17,7 @@ const WishListCard = ({ post , handleWishListDelete}) => {
                     />
                     <FiTrash
                         onClick={() => {
-                            handleWishListDelete(_id);
+                            handleWishListDelete(id);
                         }}
                         className="absolute top-5 right-5 text-red-500 bg-gray-200 shadow-xl cursor-pointer rounded p-0.5"
                         size={25}
@@ -35,7 +35,7 @@ const WishListCard = ({ post , handleWishListDelete}) => {
                     </p>
                     <div className="flex items-center flex-wrap ">
                         <Link
-                            to={`/blog/${_id}`}
+                            to={`/blog/${id}`}
                             className="text-indigo-500 dark:text-blue-500 inline-flex items-center md:mb-2 lg:mb-0">
                             Read More
                             <svg

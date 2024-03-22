@@ -1,13 +1,14 @@
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { BiErrorCircle } from "react-icons/bi";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import useAxios from "../../Hooks/useAxios";
 
 
 const CategoryEdit = () => {
     const categoryDetails = useLoaderData();
-    const {_id, categoryName, categoryDescription, categoryKeywords} = categoryDetails;
+    const {id, name, description, keywords} = categoryDetails;
+    const navigate = useNavigate()
     const axios = useAxios();
     const {
         register,
@@ -17,10 +18,9 @@ const CategoryEdit = () => {
 
     const onSubmit = async (data) => {
         try {
-            const res = await axios.put(`/edit-category/${_id}`, data);
-            if (res.data?.acknowledged) {
-                toast.success('Category Edited');
-            }
+            const res = await axios.put(`/category/update/${id}`, data);
+            toast.success('Category Edited');
+            navigate('/dashboard/categories')
         } catch (error) {
             console.log(error);
         }
@@ -39,71 +39,71 @@ const CategoryEdit = () => {
                             </label>
                             <input
                                 type="text"
-                                {...register('categoryName', {
+                                {...register('name', {
                                     required: 'Category Name is required.',
                                 })}
-                                defaultValue={categoryName}
+                                defaultValue={name}
                                 placeholder="Enter Category Name"
                                 className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             />
-                            {errors.categoryName && (
+                            {errors.name && (
                                 <span className="text-center text-red-500 flex items-center gap-1">
                                     <BiErrorCircle
                                         className="inline-block ml-2"
                                         size={15}
                                     />{' '}
-                                    {errors.categoryName?.message}
+                                    {errors.name?.message}
                                 </span>
                             )}
                         </div>
                         <div className="space-y-2">
                             <label
-                                htmlFor="categoryName"
+                                htmlFor="description"
                                 className="text-xk font-medium">
                                 Category Description:
                             </label>
                             <input
                                 type="text"
-                                {...register('categoryDescription', {
+                                {...register('description', {
                                     required:
                                         'Category Description is required.',
                                 })}
-                                defaultValue={categoryDescription}
+                                defaultValue={description}
                                 placeholder="Enter Category Description"
                                 className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             />
-                            {errors.categoryDescription && (
+                            {errors.description && (
                                 <span className="text-center text-red-500 flex items-center gap-1">
                                     <BiErrorCircle
                                         className="inline-block ml-2"
                                         size={15}
                                     />{' '}
-                                    {errors.categoryDescription?.message}
+                                    {errors.description?.message}
                                 </span>
                             )}
                         </div>
                         <div className="space-y-2">
                             <label
-                                htmlFor="categoryName"
+                                htmlFor="keywords"
                                 className="text-xk font-medium">
                                 Category Keywords :
                             </label>
                             <input
                                 type="text"
-                                {...register('categoryKeywords', {
+                                {...register('keywords', {
                                     required: 'Category Keywords is required.',
                                 })}
-                                defaultValue={categoryKeywords}
+                                defaultValue={keywords}
                                 placeholder="Enter Category Keywords"
                                 className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             />
-                            {errors.categoryKeywords && (
+                            {errors.keywords && (
                                 <span className="text-center text-red-500 flex items-center gap-1">
                                     <BiErrorCircle
                                         className="inline-block ml-2"
                                         size={15}
                                     />{' '}
-                                    {errors.categoryKeywords?.message}
+                                    {errors.keywords?.message}
                                 </span>
                             )}
                         </div>

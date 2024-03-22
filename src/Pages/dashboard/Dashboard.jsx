@@ -7,7 +7,10 @@ const Dashboard = () => {
     const axios = useAxios();
     const { data: total, isLoading } = useQuery({
         queryKey: ['dashboardCount'],
-        queryFn: () => axios.get('/dashboard-count'),
+        queryFn: async () => {
+            const { data } = await axios.get('/statistics')
+            return data
+        },
     });
     if (isLoading) {
         return <Loading />;
@@ -41,7 +44,7 @@ const Dashboard = () => {
                                 Total Posts
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                {total?.data?.postCount}
+                                {total?.totalPost}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
@@ -70,7 +73,7 @@ const Dashboard = () => {
                                 Total Comments
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                {total?.data?.commentCount}
+                                {total?.totalComment}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
@@ -95,7 +98,7 @@ const Dashboard = () => {
                                 Total Users
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                {total?.data?.userCount}
+                                {total?.totalUser}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">
@@ -120,7 +123,7 @@ const Dashboard = () => {
                                 Categories
                             </p>
                             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-                                {total?.data?.categoryCount}
+                                {total?.totalCategory}
                             </h4>
                         </div>
                         <div className="border-t border-blue-gray-50 p-4">

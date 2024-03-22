@@ -1,77 +1,84 @@
-import {
-    GoogleAuthProvider,
-    createUserWithEmailAndPassword,
-    getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    signOut,
-    updateProfile
-} from 'firebase/auth';
-import PropTypes from 'prop-types';
-import { createContext, useEffect, useState } from 'react';
-import app from '../Firebase/firebase.config';
+import { createContext, useEffect, useState } from "react";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+  const axios = useAxiosPublic();
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const auth = getAuth(app);
-    const googleProvider = new GoogleAuthProvider();
+  const login = async (email, password) => {
+    const response = await axios.post("/auth/login", { email, password });
+    localStorage.setItem("token", response.data.token);
+    setUser(response.data.user);
+    setIsLoading(false);
+    return response;
+  };
 
-    const createUser = (email, password) => {
-        setIsLoading(true)
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
-    const loginUser = (email, password) => {
-        setIsLoading(true)
-        return signInWithEmailAndPassword(auth, email, password);
-    }
-    const updateUser = (displayName, photoURL)=>{
-        setIsLoading(true)
-        return updateProfile(auth.currentUser, {displayName, photoURL})
-    }
-    const googleLogin = ()=>{
-        setIsLoading(true)
-        return signInWithPopup(auth, googleProvider);
-    }
-    const logOutUser = ()=>{
-        setIsLoading(true)
-        return signOut(auth)
-    }
-    useEffect(() => {
-        const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-            if (currentUser) {
-                setUser(currentUser);
-            } else{
-                setUser(null);
+  const signUp = async (username, name, email, password) => {
+    const response = await axios.post("/auth/signup", {
+      username,
+      name,
+      email,
+      password,
+    });
+    setIsLoading(false);
+    setUser(response.data.user);
+    return response;
+  };
+  const logout = async () => {
+    setUser(null);
+    localStorage.removeItem("token");
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    const unSubscribe = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          setIsLoading(true);
+          const response = await axios.post(
+            "/auth/token-verify",
+            {},
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              }
             }
-            setIsLoading(false);
-        });
-        return () => {
-            unSubscribe();
-        };
-    }, [auth]);
-
-    const authInfo = {
-        user,
-        isLoading,
-        setIsLoading,
-        createUser,
-        logOutUser,
-        loginUser,
-        updateUser,
-        googleLogin
+          );
+          setUser(response.data);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Token verification failed:", error);
+          setUser(null);
+          localStorage.removeItem("token");
+          setIsLoading(false);
+        }
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     };
 
-    return (
-        <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
-    );
-};
-AuthProvider.propTypes = {
-    children: PropTypes.object.isRequired,
+    unSubscribe();
+  }, [axios]);
+
+  const userInfo = {
+    login,
+    signUp,
+    logout,
+    user,
+    setUser,
+    isLoading,
+    setIsLoading,
+  };
+
+  return (
+    <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
+  );
 };
 
-export default AuthProvider;
+export default AuthProvider

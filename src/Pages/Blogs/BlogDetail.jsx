@@ -13,7 +13,7 @@ const BlogDetail = () => {
     const blog = useLoaderData();
     const axios = useAxios();
     const {
-        _id,
+        id,
         author,
         category,
         image,
@@ -30,23 +30,25 @@ const BlogDetail = () => {
         refetch,
     } = useQuery({
         queryKey: ['comments'],
-        queryFn: () => axios.get(`/comments?postId=${_id}`),
+        queryFn: () => axios.get(`/comment/by-post/${id}`),
     });
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+    
     const commentHandler = (e) => {
         e.preventDefault();
         const comment = e.target.comment.value;
         const newComment = {
             comment,
-            postId: _id,
-            name: user.displayName,
-            authorImage: user.photoURL,
+            postId: id,
+            name: user.name,
+            authorImage: user.image,
             email: user.email,
         };
         axios
-            .post('/add-comment', newComment)
+            .post('/comment/create', newComment)
             .then(() => {
                 toast.success('comment add successfully');
                 e.target.reset();
@@ -139,7 +141,7 @@ const BlogDetail = () => {
                                     <p className="font-semibold text-gray-200 text-sm">
                                         {author}
                                     </p>
-                                    <p className="font-semibold text-gray-400 text-xs">
+                                    <p className="font-semibold text-gray-200 text-xs">
                                         {new Date(createdAt).toDateString()}
                                     </p>
                                 </div>
@@ -151,7 +153,7 @@ const BlogDetail = () => {
                             {createdBy == user.email ? (
                                 <Link
                                     className="bg-blue-500 rounded text-white px-1 py-0.5"
-                                    to={`/admin/edit-post/${_id}`}>
+                                    to={`/dashboard/edit-post/${id}`}>
                                     Edit
                                 </Link>
                             ) : null}
@@ -221,7 +223,7 @@ const BlogDetail = () => {
                     {comments.data.length > 0 ? (
                         comments.data.map((comment) => (
                             <article
-                                key={comment._id}
+                                key={comment.id}
                                 className="p-6 text-base">
                                 <footer className="flex justify-between items-center mb-2">
                                     <div className="flex items-center">
@@ -239,7 +241,7 @@ const BlogDetail = () => {
                                             {comment.email == user.email ? (
                                                 <Link
                                                     className="bg-blue-500 rounded text-white px-1 py-0.5"
-                                                    to={`/update-comment/${comment._id}`}>
+                                                    to={`/update-comment/${comment.id}`}>
                                                     Edit
                                                 </Link>
                                             ) : null}

@@ -1,14 +1,12 @@
-import { Avatar, DarkThemeToggle, Dropdown, Flowbite, Navbar } from 'flowbite-react';
-import { useContext, useEffect } from 'react';
+import { Avatar, DarkThemeToggle, Dropdown, Navbar } from 'flowbite-react';
+import { useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link, NavLink } from 'react-router-dom';
-import { AuthContext } from '../Context/AuthContext';
-import useAxios from '../Hooks/useAxios';
+import useAuth from '../Hooks/useAuth';
 import logo from '../assets/logo.svg';
 
 const Header = () => {
-    const axios = useAxios();
-    const { user, logOutUser, setIsLoading } = useContext(AuthContext);
+    const { user, logout, setIsLoading } = useAuth()
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -16,11 +14,8 @@ const Header = () => {
 
     const handleLogOutUser = async () => {
         try {
-            await logOutUser();
-            const logout = await axios.post('/logout');
-            if (logout.status === 200) {
-                toast.success('LogOut success!');
-            }
+            await logout();
+            toast.success('LogOut success!');
         } catch (err) {
             console.log(err);
             setIsLoading(false);
@@ -29,7 +24,6 @@ const Header = () => {
     };
 
     return (
-        <Flowbite>
             <header>
                 <Navbar
                     className="backdrop-blur relative"
@@ -65,13 +59,13 @@ const Header = () => {
                                 </Dropdown.Header>
                                 <Link
                                     className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
-                                    to="/admin">
-                                    Admin
+                                    to="/dashboard">
+                                    Dashboard
                                 </Link>
                                 <Dropdown.Divider />
                                 <Link
                                     className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
-                                    to="/admin/add-post">
+                                    to="/dashboard/add-post">
                                     Add Blog
                                 </Link>
                                 <Dropdown.Divider />
@@ -106,22 +100,13 @@ const Header = () => {
                             Home
                         </NavLink>
                         <NavLink
-                            to="/all-blogs"
+                            to="/my-blogs"
                             className={({ isActive }) =>
                                 isActive
                                     ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
                                     : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
                             }>
-                            All blogs
-                        </NavLink>
-                        <NavLink
-                            to="/featured-blogs"
-                            className={({ isActive }) =>
-                                isActive
-                                    ? 'block py-2 pr-4 pl-3 md:p-0 bg-primary text-white dark:text-white md:bg-transparent md:text-primary'
-                                    : 'block py-2 pr-4 pl-3 md:p-0 text-gray-600 dark:text-gray-300 md:bg-transparent'
-                            }>
-                            Featured Blogs
+                            My blogs
                         </NavLink>
                         <NavLink
                             to="/about"
@@ -154,7 +139,6 @@ const Header = () => {
                 </Navbar>
                 <Toaster />
             </header>
-        </Flowbite>
     );
 };
 

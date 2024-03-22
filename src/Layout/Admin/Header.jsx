@@ -51,7 +51,7 @@ const Header = ({ openSide, setOpenSide }) => {
                                     />
                                 </svg>
                             </button>
-                            <Link className="flex items-center" to="/admin">
+                            <Link className="flex items-center" to="/dashboard">
                                 <img
                                     src={logo}
                                     className="mr-3 h-6 md:h-9 dark:invert"
@@ -100,13 +100,13 @@ const Header = ({ openSide, setOpenSide }) => {
                                     </Dropdown.Header>
                                     <Link
                                         className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
-                                        to="/admin">
+                                        to="/dashboard">
                                         Admin
                                     </Link>
                                     <Dropdown.Divider />
                                     <Link
                                         className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white"
-                                        to="/admin/add-post">
+                                        to="/dashboard/add-post">
                                         Add Blog
                                     </Link>
 

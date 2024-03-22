@@ -15,7 +15,7 @@ const WishlistItems = () => {
     const { data, refetch, isLoading } = useQuery({
         queryKey: ['wishlist'],
         queryFn: async () => {
-            const data = await axios.get(`/get-wish-list/${email}`);
+            const data = await axios.get(`/wishlist/all/${email}`);
             return data.data;
         },
         retry: 'true',
@@ -37,17 +37,13 @@ const WishlistItems = () => {
                 confirmButtonText: 'Yes, Remove it!',
             });
             if (isConfirm.isConfirmed) {
-                const result = await axios.delete(`/delete-to-wishlist/${id}`);
-                if (result?.data?.deletedCount) {
-                    Swal.fire(
-                        'Removed!',
-                        'Successfully Removed from Wishlist.',
-                        'success',
-                    );
-                    refetch();
-                } else {
-                    Swal.fire('Erorr', 'Something Went Wrong :)', 'error');
-                }
+                await axios.delete(`/wishlist/delete/${id}`);
+                Swal.fire(
+                    'Removed!',
+                    'Successfully Removed from Wishlist.',
+                    'success',
+                );
+                refetch();
             } else if (isConfirm.dismiss === Swal.DismissReason.cancel) {
                 {
                     Swal.fire('Cancelled', 'Your Wishlist is safe :)', 'error');
@@ -66,7 +62,7 @@ const WishlistItems = () => {
                         {data?.map((post) => (
                             <WishListCard
                                 post={post}
-                                key={post._id}
+                                key={post.id}
                                 handleWishListDelete={handleWishListDelete}
                             />
                         ))}

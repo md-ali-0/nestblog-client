@@ -9,8 +9,8 @@ const CategoriesList = () => {
         data: categories,
         isLoading,
     } = useQuery({
-        queryKey: ['categories'],
-        queryFn: () => axios.get('/categories'),
+        queryKey: ['categoriesHome'],
+        queryFn: () => axios.get('/category/all'),
     });
     if (isLoading) {
         return <Loading />;
@@ -25,10 +25,10 @@ const CategoriesList = () => {
                     {
                         categories.data.map(category=>(
                         <li key={category._id} className="flex border border-primary/60 rounded-xl py-1 px-2">
-                            <Link to={`/category/${category.categoryName}`}
+                            <Link to={`/category/${category.name}`}
                                 
                                 className="text-gray-800 font-semibold hover:text-blue-500 dark:text-gray-100">
-                                {category.categoryName}
+                                {category.name}
                             </Link>
                         </li>
                         ))

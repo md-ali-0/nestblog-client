@@ -30,34 +30,35 @@ const Categories = () => {
     } = useForm();
 
     const {
-        data: categories,
+        data: categories = [],
         refetch,
         isLoading,
     } = useQuery({
-        queryKey: ['categories'],
-        queryFn: () => axios.get('/categories'),
+        queryKey: ['categoriesList'],
+        queryFn: async ()=>{
+            const { data } = await axios.get('/category/all')
+            return data;
+        },
     });
     const theme = useTheme(getTheme());
 
     if (isLoading) {
         return <Loading />;
     }
-    const nodes = [...categories.data];
-    const data = { nodes };
-
+    const nodes = [...categories];
+    const categoryData = { nodes };
+    
     const onSubmit = async (data) => {
         try {
-            const res = await axios.post('/add-category', data);
-            if (res.data?.acknowledged) {
-                toast.success('Category Added');
-                reset();
-                refetch();
-            }
+            await axios.post('/category/add', data);
+            toast.success('Category Added');
+            reset();
+            refetch();
         } catch (error) {
             console.log(error);
         }
     };
-    const delteCategory = async (id) => {
+    const deleteCategory = async (id) => {
         try {
             const isConfirm = await Swal.fire({
                 title: 'Are you sure?',
@@ -69,15 +70,13 @@ const Categories = () => {
                 confirmButtonText: 'Yes, delete it!',
             });
             if (isConfirm.isConfirmed) {
-                const result = await axios.delete(`/delete-category/${id}`);
-                if (result?.data?.acknowledged) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your Category has been deleted.',
-                        'success',
-                    );
-                    refetch();
-                }
+                const result = await axios.delete(`/category/delete/${id}`);
+                Swal.fire(
+                    'Deleted!',
+                    'Your Category has been deleted.',
+                    'success',
+                );
+                refetch();
             } else if (isConfirm.dismiss === Swal.DismissReason.cancel) {
                 {
                     Swal.fire(
@@ -98,25 +97,25 @@ const Categories = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-2">
                             <label
-                                htmlFor="categoryName"
+                                htmlFor="name"
                                 className="text-xk font-medium">
                                 Category Name:
                             </label>
                             <input
                                 type="text"
-                                {...register('categoryName', {
+                                {...register('name', {
                                     required: 'Category Name is required.',
                                 })}
                                 placeholder="Enter Category Name"
                                 className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             />
-                            {errors.categoryName && (
+                            {errors.name && (
                                 <span className="text-center text-red-500 flex items-center gap-1">
                                     <BiErrorCircle
                                         className="inline-block ml-2"
                                         size={15}
                                     />{' '}
-                                    {errors.categoryName?.message}
+                                    {errors.name?.message}
                                 </span>
                             )}
                         </div>
@@ -128,44 +127,44 @@ const Categories = () => {
                             </label>
                             <input
                                 type="text"
-                                {...register('categoryDescription', {
+                                {...register('description', {
                                     required:
                                         'Category Description is required.',
                                 })}
                                 placeholder="Enter Category Description"
                                 className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             />
-                            {errors.categoryDescription && (
+                            {errors.description && (
                                 <span className="text-center text-red-500 flex items-center gap-1">
                                     <BiErrorCircle
                                         className="inline-block ml-2"
                                         size={15}
                                     />{' '}
-                                    {errors.categoryDescription?.message}
+                                    {errors.description?.message}
                                 </span>
                             )}
                         </div>
                         <div className="space-y-2">
                             <label
-                                htmlFor="categoryName"
+                                htmlFor="keywords"
                                 className="text-xk font-medium">
                                 Category Keywords :
                             </label>
                             <input
                                 type="text"
-                                {...register('categoryKeywords', {
+                                {...register('keywords', {
                                     required: 'Category Keywords is required.',
                                 })}
                                 placeholder="Enter Category Keywords"
                                 className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                             />
-                            {errors.categoryKeywords && (
+                            {errors.keywords && (
                                 <span className="text-center text-red-500 flex items-center gap-1">
                                     <BiErrorCircle
                                         className="inline-block ml-2"
                                         size={15}
                                     />{' '}
-                                    {errors.categoryKeywords?.message}
+                                    {errors.keywords?.message}
                                 </span>
                             )}
                         </div>
@@ -193,7 +192,7 @@ const Categories = () => {
                     </form>
                 </div>
                 <div className="border-gray-200 rounded-lg p-5 bg-white dark:bg-gray-800 dark:border-gray-700 md:w-1/2">
-                    <Table data={data} theme={theme}>
+                    <Table data={categoryData} theme={theme}>
                         {(tableList) => (
                             <>
                                 <Header>
@@ -207,16 +206,16 @@ const Categories = () => {
 
                                 <Body>
                                     {tableList.map((item) => (
-                                        <Row key={item._id} item={item}>
-                                            <Cell>{item.categoryName}</Cell>
+                                        <Row key={item.id} item={item}>
+                                            <Cell>{item.name}</Cell>
                                             <Cell>
-                                                {item.categoryDescription}
+                                                {item.description}
                                             </Cell>
-                                            <Cell>{item.categoryKeywords}</Cell>
+                                            <Cell>{item.keywords}</Cell>
                                             <Cell>
                                                 <div className="flex justify-center items-center gap-1">
                                                     <Link
-                                                        to={`/admin/edit-category/${item._id}`}
+                                                        to={`/dashboard/edit-category/${item.id}`}
                                                         className="bg-blue-500 rounded text-white px-1.5 py-0.5">
                                                         <FiEdit
                                                             size={15}
@@ -225,8 +224,8 @@ const Categories = () => {
                                                     </Link>
                                                     <button
                                                         onClick={() =>
-                                                            delteCategory(
-                                                                item._id,
+                                                            deleteCategory(
+                                                                item.id,
                                                             )
                                                         }
                                                         className="bg-red-500 rounded text-white px-1.5 py-0.5">

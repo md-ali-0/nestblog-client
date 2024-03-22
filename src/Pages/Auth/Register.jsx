@@ -1,19 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiErrorCircle } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../Context/AuthContext';
-import useAxios from '../../Hooks/useAxios';
-import useImageUpload from '../../Hooks/useImageUpload';
+import useAuth from '../../Hooks/useAuth';
 
 const Register = () => {
-    const { createUser, updateUser, logOutUser, googleLogin, setIsLoading } =
-        useContext(AuthContext);
     const [show, setShow] = useState(false);
-    const navigate = useNavigate();
-    const axios = useAxios();
-    const { uploadImage } = useImageUpload();
+    const navigation = useNavigate()
+    const {signUp} = useAuth()
     const {
         register,
         handleSubmit,
@@ -24,76 +19,18 @@ const Register = () => {
     }, []);
 
     const onSubmit = async (data) => {
-        const { name, picture, email, password } = data;
-        const  loadingToast = toast.loading('Creating Account ... !!');
-        try {
-            const userResult = await createUser(email, password);
-            const user = userResult.user;
-            const newUser = {
-                name: name,
-                email: user.email,
-                role: 'admin',
-                createdAt: user.metadata?.creationTime,
-                lastSignInTime: user.metadata?.lastSignInTime,
-            };
-            if (userResult.user?.email) {
-                try {
-                    await axios.post('/add-user', newUser)
-                    const imageResult = await uploadImage(picture[0]);
-                    if (imageResult) {
-                        await updateUser(name, imageResult);
-                        toast.dismiss(loadingToast);
-                        toast.success('Successfully created!');
-                        await logOutUser();
-                        navigate('/login');
-                    }
-                } catch (error) {
-                    setIsLoading(false)
-                    console.log('Error image', error);
-                }
-            }
-        } catch (error) {
-            if ('auth/email-already-in-use' === error.code) {
-                toast.dismiss(loadingToast);
-                return toast.error('Email Already Used!');
-            }
-            setIsLoading(false)
-            toast.dismiss(loadingToast);
-            toast.error(error.code);
-        }
-    };
-    const handleGoogleLogin = async () => {
-        const  loadingToast = toast.loading('Creating Account ... !!');
-        try {
-            const googleLoginUser = await googleLogin();
-            if (googleLoginUser.user?.email) {
 
-                const user = googleLoginUser.user;
-                const newUser = {
-                    name: user.displayName,
-                    email: user.email,
-                    role: 'admin',
-                    createdAt: user.metadata?.creationTime,
-                    lastSignInTime: user.metadata?.lastSignInTime,
-                };
-                const userJWT = { email: user.email };
-                axios
-                    .post('/jwt', userJWT)
-                    .then((res) => console.log(res.data))
-                    .catch(err=>console.log(err))
-                await axios.put('/edit-user', newUser)
-                toast.dismiss(loadingToast);
-                toast.success('Successfully created!');
-                await logOutUser();
-                navigate('/auth/login');
-            }
+        const{username, name, email, password} = data
+        const toastLoading = toast.loading('User Signuping...')
+        try {
+            const response = await signUp(username, name, email, password)
+            toast.dismiss(toastLoading)
+            toast.success('Sign Up Successfully')
+            navigation('/dashboard')
         } catch (error) {
-            if ('auth/email-already-in-use' === error.code) {
-                return toast.error('Email Already Used!');
-            }
-            toast.dismiss(loadingToast);
-            setIsLoading(false)
-            toast.error(error.code);
+            console.log(error);
+            toast.dismiss(toastLoading)
+            toast.error(error?.response?.data)
         }
     };
     return (
@@ -113,19 +50,21 @@ const Register = () => {
                                     onSubmit={handleSubmit(onSubmit)}>
                                     <div className="space-y-1">
                                         <label
-                                            htmlFor="userName"
+                                            htmlFor="name"
                                             className="text-sm font-medium">
                                             Full Name
                                         </label>
                                         <input
+                                            id='name'
+                                            name='name'
                                             type="text"
                                             {...register('name', {
                                                 required:
                                                     'Name is required.',
                                                 minLength: {
-                                                    value: 5,
+                                                    value: 3,
                                                     message:
-                                                        'Name should be at least 5 characters.',
+                                                        'Name should be at least 3 characters.',
                                                 },
                                                 maxLength: {
                                                     value: 15,
@@ -148,46 +87,38 @@ const Register = () => {
                                     </div>
                                     <div className="space-y-1">
                                         <label
-                                            htmlFor="picture"
+                                            htmlFor="userName"
                                             className="text-sm font-medium">
-                                            Profile Picture
+                                            User Name
                                         </label>
                                         <input
-                                            type="file"
-                                            accept="image/png, image/jpeg"
-                                            {...register('picture', {
+                                            type="text"
+                                            id='username'
+                                            name='username'
+                                            {...register('username', {
                                                 required:
-                                                    'Profile Picture is required.',
-                                                validate: (value) => {
-                                                    const acceptFormat = [
-                                                        'png',
-                                                        'jpg',
-                                                        'jpeg',
-                                                    ];
-                                                    const fileExtension =
-                                                        value[0]?.name
-                                                            .split('.')
-                                                            .pop()
-                                                            .toLowerCase();
-                                                    if (
-                                                        !acceptFormat.includes(
-                                                            fileExtension,
-                                                        )
-                                                    ) {
-                                                        return 'Invalid file. Select .png, .jpg, .jpeg only.';
-                                                    }
-                                                    return true;
+                                                    'Username is required.',
+                                                minLength: {
+                                                    value: 5,
+                                                    message:
+                                                        'Name should be at least 5 characters.',
+                                                },
+                                                maxLength: {
+                                                    value: 15,
+                                                    message:
+                                                        'Name should not exceed 15 characters.',
                                                 },
                                             })}
-                                            className="w-full block border placeholder-gray-500 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
+                                            placeholder="Enter Username"
+                                            className="w-full block border placeholder-gray-500 px-5 py-3 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400"
                                         />
-                                        {errors.picture && (
+                                        {errors.username && (
                                             <span className="text-center text-red-500 flex items-center gap-1">
                                                 <BiErrorCircle
                                                     className="inline-block ml-2"
                                                     size={15}
-                                                />{' '}
-                                                {errors.picture?.message}
+                                                />
+                                                {errors.username?.message}
                                             </span>
                                         )}
                                     </div>
@@ -198,7 +129,9 @@ const Register = () => {
                                             Email
                                         </label>
                                         <input
-                                            type="text"
+                                            type="email"
+                                            id='email'
+                                            name='email'
                                             {...register('email', {
                                                 required: 'Email is required.',
                                                 pattern: {
@@ -227,6 +160,8 @@ const Register = () => {
                                             Password
                                         </label>
                                         <input
+                                            id='password'
+                                            name='password'
                                             type={show ? 'text' : 'password'}
                                             {...register('password', {
                                                 required:
@@ -314,47 +249,6 @@ const Register = () => {
                                             </svg>
                                             <span>Sign Up</span>
                                         </button>
-
-                                        <div className="flex items-center my-5">
-                                            <span
-                                                aria-hidden="true"
-                                                className="grow bg-gray-100 rounded h-0.5 dark:bg-gray-700/75"
-                                            />
-                                            <span className="text-xs font-medium text-gray-800 bg-gray-100 rounded-full px-3 py-1 dark:bg-gray-700 dark:text-gray-200">
-                                                or sign up with
-                                            </span>
-                                            <span
-                                                aria-hidden="true"
-                                                className="grow bg-gray-100 rounded h-0.5 dark:bg-gray-700/75"
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-1">
-                                            <button
-                                                type="button"
-                                                onClick={handleGoogleLogin}
-                                                className="inline-flex justify-center items-center space-x-2 border font-semibold rounded-lg px-3 py-2 leading-5 text-sm border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm focus:ring focus:ring-gray-300 focus:ring-opacity-25 active:border-gray-200 active:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-gray-200 dark:focus:ring-gray-600 dark:focus:ring-opacity-40 dark:active:border-gray-700">
-                                                <svg
-                                                    className="bi bi-facebook inline-block w-4 h-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    x="0px"
-                                                    y="0px"
-                                                    viewBox="0 0 48 48">
-                                                    <path
-                                                        fill="#FFC107"
-                                                        d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
-                                                    <path
-                                                        fill="#FF3D00"
-                                                        d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
-                                                    <path
-                                                        fill="#4CAF50"
-                                                        d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
-                                                    <path
-                                                        fill="#1976D2"
-                                                        d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
-                                                </svg>
-                                                <span>Google</span>
-                                            </button>
-                                        </div>
                                     </div>
                                 </form>
                             </div>

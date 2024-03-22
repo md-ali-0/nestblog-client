@@ -19,7 +19,7 @@ const AllPosts = () => {
     const { data: allPosts, isLoading, refetch } = useQuery({
         queryKey: ['posts', currentPage, postPerPage],
         queryFn: () =>
-            axios.get(`/all-post?page=${currentPage - 1}&size=${postPerPage}`),
+            axios.get(`/post/all?page=${currentPage - 1}&size=${postPerPage}`),
     });
     const handleItemPerPage = (e) => {
         setPostPerPage(e.target.value);
@@ -37,15 +37,13 @@ const AllPosts = () => {
                 confirmButtonText: 'Yes, delete it!',
             });
             if (isConfirm.isConfirmed) {
-                const result = await axios.delete(`/delete-post/${id}`);
-                if (result?.data?.deletedCount) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your Post has been deleted.',
-                        'success',
-                    );
-                    refetch();
-                }
+                const result = await axios.delete(`/post/delete/${id}`);
+                Swal.fire(
+                    'Deleted!',
+                    'Your Post has been deleted.',
+                    'success',
+                );
+                refetch();
             } else if (isConfirm.dismiss === Swal.DismissReason.cancel) {
                 {
                     Swal.fire(
@@ -56,14 +54,16 @@ const AllPosts = () => {
                 }
             }
         } catch (error) {
+            console.log(error);
             Swal.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
         }
     };
     useEffect(() => {
         axios
-            .get('/dashboard-count')
-            .then((res) => setTotalPost(res.data.postCount));
+            .get('/post/total')
+            .then((res) => setTotalPost(res.data));
     }, [axios]);
+    
     if (isLoading) {
         return <Loading />;
     }
@@ -98,7 +98,7 @@ const AllPosts = () => {
                         <tbody>
                             {allPosts.data.map((post) => (
                                 <tr
-                                    key={post._id}
+                                    key={post.id}
                                     className="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                                     <th
                                         scope="row"
@@ -119,12 +119,12 @@ const AllPosts = () => {
                                         {post.shortDescription}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {post.createdAt}
+                                        {new Date(post.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-2">
                                             <Link
-                                                to={`/admin/edit-post/${post._id}`}
+                                                to={`/dashboard/edit-post/${post.id}`}
                                                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                                 <FiEdit
                                                     size={15}
@@ -133,7 +133,7 @@ const AllPosts = () => {
                                             </Link>
                                             <button
                                                 onClick={() =>
-                                                    handleDeletePost(post._id)
+                                                    handleDeletePost(post.id)
                                                 }
                                                 className="font-medium text-red-600 dark:red-blue-500 hover:underline">
                                                 <FiTrash2

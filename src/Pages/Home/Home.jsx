@@ -1,6 +1,6 @@
 import Banner from './Banner';
 import CategoriesList from './CategoriesList';
-import Featured from './Featured';
+// import Featured from './Featured';
 import LatestBlogs from './LatestBlogs';
 import NewsLatter from './NewsLatter';
 import StayConnected from './StayConnected';
@@ -16,7 +16,7 @@ const Home = () => {
                         <LatestBlogs />
                     </div>
                     <div className="col-span-4 md:col-span-2 px-3">
-                        <Featured />
+                        {/* <Featured /> */}
                         <CategoriesList />
                         <StayConnected/>
                     </div>

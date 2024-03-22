@@ -15,10 +15,9 @@ const UpdateComment = () => {
     
     const onSubmit = async (data) => {
         try {
-            const res = await axios.put(`/edit-comment/${comment._id}`, data);
-            if (res.data?.acknowledged) {
-                toast.success('Comment Edited');
-            }
+            console.log(comment.id);
+            const res = await axios.put(`/comment/update/${comment.id}`, data);
+            toast.success('Comment Edited');
         } catch (error) {
             console.log(error);
         }

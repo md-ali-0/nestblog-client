@@ -1,34 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
-import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FiHeart } from 'react-icons/fi';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../Context/AuthContext';
+import useAuth from '../../Hooks/useAuth';
 import useAxios from '../../Hooks/useAxios';
 import Loading from '../../components/Loading';
 
 const AllBlogs = () => {
-    const { user, isLoading: loading } = useContext(AuthContext);
+    const { user, isLoading: loading } = useAuth()
 
     const email = user.email;
     const axios = useAxios();
 
-    const [filterCategory, setFilterCategory] = useState('');
-    const [serachValue, setSerachValue] = useState('');
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        axios.get('/categories').then((res) => setCategories(res.data));
-    }, [axios]);
-
     const { data = [] } = useQuery({
-        queryKey: ['allPosts', filterCategory],
+        queryKey: ['myPosts'],
         enabled: !!user?.email,
         queryFn: async () => {
             const { data } = await axios.get(
-                `/all-blogs?email=${email}&category=${filterCategory}`,
+                `/post/my-posts/${email}`,
             );
             return data;
         },
@@ -40,12 +31,10 @@ const AllBlogs = () => {
 
     const handleWishList = async (post) => {
         const email = user?.email;
-        const addWishListBlog = { ...post, user: email };
+        const addWishListBlog = { ...post, wishlistBy: email };
         try {
-            const res = await axios.post('/add-to-wishlist', addWishListBlog);
-            if (res.data?.acknowledged) {
-                toast.success('Wishlist Added!');
-            }
+            const res = await axios.post('/wishlist/add', addWishListBlog);
+            toast.success('Wishlist Added!');
         } catch (error) {
             console.log(error);
         }
@@ -96,18 +85,6 @@ const AllBlogs = () => {
                         </li>
                     </ol>
                 </nav>
-                <div className="flex justify-center items-center py-5">
-                    <div className="relative mx-auto text-gray-600">
-                        <input
-                            onChange={(e) => setSerachValue(e.target.value)}
-                            className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
-                            type="search"
-                            name="search"
-                            placeholder="Search"
-                        />
-                    </div>
-                </div>
-                <div></div>
             </div>
             <div>
                 <section className="text-gray-600 body-font">
@@ -116,47 +93,13 @@ const AllBlogs = () => {
                             <h3 className="text-4xl underline underline-offset-4 font-bold mb-10">
                                 All Blogs
                             </h3>
-                            <div className="flex items-center gap-2">
-                                <label
-                                    htmlFor="category"
-                                    className="text-sm font-medium">
-                                    Filter By Category :
-                                </label>
-                                <select
-                                    onChange={(e) =>
-                                        setFilterCategory(e.target.value)
-                                    }
-                                    className="border placeholder-gray-500 px-5 py-1.5 my-1 leading-6 rounded-lg border-gray-200 focus:border-blue-500 focus:ring-0 dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:placeholder-gray-400">
-                                    {categories?.map((category, idx) => {
-                                        return (
-                                            <option
-                                                key={idx}
-                                                value={category.categoryName}>
-                                                {category.categoryName}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
                         </div>
                         <div>
                         <div className="grid grid-cols-1 md:grid-rows-2 lg:grid-cols-3 -m-4">
                             {data &&
-                                data?.filter((post) => {
-                                        if (serachValue === '') {
-                                            return post;
-                                        } else if (
-                                            post.title
-                                                .toLowerCase()
-                                                .includes(
-                                                    serachValue.toLowerCase(),
-                                                )
-                                        ) {
-                                            return post;
-                                        }
-                                    }).map((post) => (
+                                data?.map((post) => (
                                         <div
-                                            key={post._id}
+                                            key={post.id}
                                             className="p-4">
                                             <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden dark:border-gray-600">
                                                 <div className="relative">
